@@ -2,12 +2,13 @@
 % Please edit documentation in R/DAgostino-Pearson_test.R
 \name{D.Agostino_Pearson_test}
 \alias{D.Agostino_Pearson_test}
-\title{D'Agostino-Pearson test for normal distribution inferences.}
+\title{D'Agostino-Pearson K2 test for normal distribution inferences.}
 \usage{
 D.Agostino_Pearson_test(
   x,
   alpha = 0.05,
-  alternative = c("two.sided", "less", "greater")
+  alternative = c("two.sided", "less", "greater"),
+  min_n = 20
 )
 }
 \arguments{
@@ -15,12 +16,15 @@ D.Agostino_Pearson_test(
 
 \item{alpha}{Significance threshold (default: 0.05).}
 
-\item{alternative}{Character. The alternative hypothesis (H1) to test.
-Available options are c("two.sided", "less", "greater").}
+\item{alternative}{Character (default: "two.sided).
+The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").
+Note that, this is only applicable on skewness and kurtosis test, not functioning on the omnibus K-square test.}
+
+\item{min_n}{Integer. The minimum observations required (default: 20).}
 }
 \value{
 A list:
-bool: Is the input data normally distributed?
+is_normal: Is the input data normally distributed?
 method: The name of the test.
 alpha: Significance threshold (default: 0.05).
 alternative: The alternative hypothesis (H1) to test.
@@ -30,7 +34,13 @@ pvalue: p-value.
 confidence_interval: The lower and upper bound of CI.
 }
 \description{
-D'Agostino-Pearson test for normal distribution inferences.
+The D'Agostino–Pearson K\if{html}{\out{<sup>}}2\if{html}{\out{</sup>}} test is a statistical test for assessing whether a sample comes from a normal distribution.
+It combines information from:
+\itemize{
+\item skewness (asymmetry)
+\item kurtosis (tail heaviness)
+into a single omnibus test statistic.
+}
 }
 \examples{
 D.Agostino_Pearson_test(cholesterol)

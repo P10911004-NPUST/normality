@@ -1,81 +1,107 @@
-skewness <- function(x, population = FALSE, method = "fp")
-{
-    if (method == "fp")
-    {
-        x <- x[stats::complete.cases(x)]
-        xbar <- mean(x)
-        n <- length(x)
-        std.p <- sqrt(sum((x - xbar) ^ 2) / n)  # Population's standard deviation
-
-        if (isTRUE(population))
-            ret <- sum((x - xbar) ^ 3) / (n * (std.p ^ 3))
-        else
-            ret <- Fisher_Pearson_skewness(x)
-    }
-
-    return(ret)
-}
-
-
-D.Agostino_skewness <- function(
+#' Skewness test
+#'
+#' @param x Numeric vector. The input data.
+#' @param alpha Numeric (default: 0.05). Significance threshold (0 - 1).
+#' @param alternative Character (default: "two.sided).
+#'      The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").
+#' @param method Character (default: "G1"). Different skewness formula.
+#'      Available options are c("G1", "b1", "g1"). The "g1" is the original one.
+#'      The "G1" and "b1" are the unbiased estimate version of "g1".
+#'
+#' @returns A list:
+#' is_normal: Is the input data normally distributed?
+#' method: The name of the test.
+#' alpha: Significance threshold (default: 0.05).
+#' alternative: The alternative hypothesis (H1) to test.
+#' summary_table: Statistic summary, if any.
+#' statistic: The value used to calculate p-value.
+#' pvalue: p-value.
+#' confidence_interval: The lower and upper bound of CI.
+#'
+#' @examples
+#' skewness(cholesterol)
+#' @references
+#' Joanes, D.N., Gill, C.A., 1998.
+#' Comparing measures of sample skewness and kurtosis.
+#' J Royal Statistical Soc D 47, 183–189.
+#' https://doi.org/10.1111/1467-9884.00122
+#'
+#' Wright, D.B., Herrington, J.A., 2011.
+#' Problematic standard errors and confidence intervals for skewness and kurtosis.
+#' Behav Res 43, 8–17.
+#' https://doi.org/10.3758/s13428-010-0044-x
+#' @export
+skewness <- function(
         x,
         alpha = 0.05,
-        alternative = c("two.sided", "less", "greater")
-) {
-    alt <- match.arg(alternative)
+        alternative = c("two.sided", "less", "greater"),
+        method = c("G1", "b1", "g1")
+){
+    stopifnot(alpha >= 0 & alpha <= 1)
+    alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
+    method <- match.arg(method[1], c("G1", "b1", "g1"))
+
     x <- x[stats::complete.cases(x)]
     n <- length(x)
     avg <- mean(x)
-    se <- sqrt((6 * n * (n - 1)) / ((n - 2) * (n + 1) * (n + 3))) # standard error
 
-    #----------------------------- Sample moments -----------------------------#
-    m2 <- sum((x - avg) ^ 2) / n # formula 6
-    m3 <- sum((x - avg) ^ 3) / n # formula 6
+    m2 <- sum((x - avg) ^ 2) / n
+    m3 <- sum((x - avg) ^ 3) / n
 
-    b1 <- m3 / sqrt(m2 ^ 3) # formula 4, skewness, the symbol is square-rooted b1
+    g1 <- m3 / sqrt(m2 ^ 3)
+    var_g1 <- 6 * (n - 2) / ((n + 1) * (n + 3))
+    se_g1 <- sqrt(var_g1)
 
-    #---------------------------- Test of skewness ----------------------------#
-    Y <- b1 * sqrt( (n + 1) * (n + 3) / (6 * (n - 2)) ) # formula 8
+    if (method == "g1")
+    {
+        skew <- g1
+        se <- se_g1
+        Zs <- g1 / se
+    }
 
-    beta2 <- 3 * (n ^ 2 + 27 * n - 70) * (n + 1) * (n + 3) # formula 9
-    beta2 <- beta2 / ((n - 2) * (n + 5) * (n + 7) * (n + 9)) # formula 9
+    if (method == "G1")
+    {
+        skew <- g1 * sqrt(n * (n - 1)) / (n - 2)
+        se <- se_g1 * sqrt(n * (n - 1)) / (n - 2)
+        Zs <- skew / se
+    }
 
-    W2 <- sqrt(2 * (beta2 - 1)) - 1 # formula 10
-    delta <- 1 / sqrt(log(sqrt(W2))) # formula 11
-    alpha_2 <- sqrt(2 / (W2 - 1)) # formula 12
-
-    # Z-value of the skewness
-    Zs <- delta * log( (Y / alpha_2) + sqrt((Y / alpha_2) ^ 2 + 1) ) # formula 13
+    if (method == "b1")
+    {
+        skew <- g1 * sqrt(((n - 1) / n) ^ 3)
+        se <- se_g1 * sqrt(((n - 1) / n) ^ 3)
+        Zs <- skew / se
+    }
 
     pval <- stats::pnorm(Zs, lower.tail = FALSE) * 2
 
     if (alt == "two.sided")
     {
         Zs_pval <- if (pval > 1) 2 - pval else pval
-        critical_Zs <- stats::qnorm(1 - alpha / 2)
+        Zcrit <- stats::qnorm(1 - alpha / 2)
     }
 
     if (alt == "less") # skewness < 0, the peak towards right
     {
         Zs_pval <- pval / 2
-        critical_Zs <- stats::qnorm(1 - alpha)
+        Zcrit <- stats::qnorm(1 - alpha)
     }
 
     if (alt == "greater") # skewness > 0, the peak towards left
     {
         Zs_pval <- 1 - pval / 2
-        critical_Zs <- stats::qnorm(alpha)
+        Zcrit <- stats::qnorm(alpha)
     }
 
-    CI_lower <- b1 - se * critical_Zs
-    CI_upper <- b1 + se * critical_Zs
+    CI_lower <- skew - se * Zcrit
+    CI_upper <- skew + se * Zcrit
 
-    summary_table <- data.frame(
+    tab <- data.frame(
         check.names = FALSE,
-        row.names = "skewness (sqrt-b1)",
-        "statistic" = b1,
+        row.names = sprintf("skewness (%s)", method),
+        "statistic" = skew,
         "Z" = Zs,
-        "Zcrit" = critical_Zs,
+        "Zcrit" = Zcrit,
         "SE" = se,
         "pval" = Zs_pval,
         "CI_lower" = CI_lower,
@@ -83,36 +109,45 @@ D.Agostino_skewness <- function(
     )
 
     normality_standard_output(
-        method = "D'Agostino's b1 skewness test",
-        bool = (Zs_pval > alpha),
+        method = sprintf("Skewness (%s) test", method),
+        is_normal = (Zs_pval > alpha),
         alpha = alpha,
         alternative = alt,
-        summary_table = summary_table,
-        statistic = c("sqrt-b1" = b1, "Z(sqrt-b1)" = Zs),
+        summary_table = tab,
+        statistic = stats::setNames(c(skew, se), c(method, "SE")),
         pvalue = Zs_pval,
         confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
     )
 }
 
 
-Pearson_mode_skewness <- function(x)
-{
-    # Pearson's First Coefficient of Skewness
-    ## This is not reliable when the mode is only a few pieces of data
-    x <- x[stats::complete.cases(x)]
-    `_mode_` <- sort(x)[unname(which.max(table(x)))]
-    skew <- (mean(x) - `_mode_`) / stats::sd(x)
-    return(skew)
-}
 
 
-Pearson_median_skewness <- function(x)
-{
-    # Pearson's Second Coefficient of Skewness
-    x <- x[stats::complete.cases(x)]
-    skew <- 3 * (mean(x) - stats::median(x)) / stats::sd(x)
-    return(skew)
-}
+
+# Pearson_skewness <- function(x, center = c("median", "mode"))
+# {
+#     center <- match.arg(center, c("median", "mode"))
+#
+#     if (center == "mode")
+#     {
+#         # Pearson's First Coefficient of Skewness
+#         ## This is not reliable when the mode is only a few pieces of data
+#         x <- x[stats::complete.cases(x)]
+#         `_mode_` <- sort(x)[unname(which.max(table(x)))]
+#         skew <- (mean(x) - `_mode_`) / stats::sd(x)
+#     }
+#
+#     if (center == "median")
+#     {
+#         # Pearson's Second Coefficient of Skewness
+#         x <- x[stats::complete.cases(x)]
+#         skew <- 3 * (mean(x) - stats::median(x)) / stats::sd(x)
+#     }
+#
+#     return(skew)
+# }
+
+
 
 
 Fisher_Pearson_skewness <- function(x, adjusted = TRUE)
@@ -145,6 +180,4 @@ Fisher_Pearson_skewness <- function(x, adjusted = TRUE)
 
     return(g1)
 }
-
-
 

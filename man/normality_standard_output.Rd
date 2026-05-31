@@ -6,7 +6,7 @@
 \usage{
 normality_standard_output(
   method = "what test?",
-  bool = NA,
+  is_normal = NA,
   alpha = NA_real_,
   alternative = c("two.sided", "less", "greater"),
   summary_table = NULL,
@@ -18,7 +18,7 @@ normality_standard_output(
 \arguments{
 \item{method}{Character. The name of the test.}
 
-\item{bool}{Logical. Is the input data normally distributed?}
+\item{is_normal}{Logical. Is the input data normally distributed?}
 
 \item{alpha}{Numeric (default: 0.05). Significance threshold.}
 

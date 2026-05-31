@@ -1,80 +1,122 @@
-D.Agostino_kurtosis <- function(
+#' Kurtosis test
+#'
+#' @param x Numeric vector. The input data.
+#' @param alpha Numeric (default: 0.05). Significance threshold (0 - 1).
+#' @param alternative Character (default: "two.sided).
+#'      The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").
+#' @param method Character (default: "G2"). Different skewness formula.
+#'      Available options are c("G2", "b2", "g2"). The "g2" is the original one.
+#'      The "G2" and "b2" are the unbiased estimate version of "g2".
+#'
+#' @returns A list:
+#' is_normal: Is the input data normally distributed?
+#' method: The name of the test.
+#' alpha: Significance threshold (default: 0.05).
+#' alternative: The alternative hypothesis (H1) to test.
+#' summary_table: Statistic summary, if any.
+#' statistic: The value used to calculate p-value.
+#' pvalue: p-value.
+#' confidence_interval: The lower and upper bound of CI.
+#'
+#' @examples
+#' d1 <- c(10:17, 12, 12, 13, 13, 13, 13, 13, 14, 14, 14, 15, 15)
+#' kurtosis(d1)
+#' @references
+#' Joanes, D.N., Gill, C.A., 1998.
+#' Comparing measures of sample skewness and kurtosis.
+#' J Royal Statistical Soc D 47, 183–189.
+#' https://doi.org/10.1111/1467-9884.00122
+#'
+#' Wright, D.B., Herrington, J.A., 2011.
+#' Problematic standard errors and confidence intervals for skewness and kurtosis.
+#' Behav Res 43, 8–17.
+#' https://doi.org/10.3758/s13428-010-0044-x
+#' @export
+kurtosis <- function(
         x,
         alpha = 0.05,
-        alternative = c("two.sided", "less", "greater")
-) {
-    alt <- match.arg(alternative)
+        alternative = c("two.sided", "less", "greater"),
+        method = c("G2", "b2", "g2")
+){
+    stopifnot(alpha >= 0 & alpha <= 1)
+    alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
+    method <- match.arg(method[1], c("G2", "b2", "g2"))
+
     x <- x[stats::complete.cases(x)]
     n <- length(x)
     avg <- mean(x)
 
-    #----------------------------- Sample moments -----------------------------#
     m2 <- sum((x - avg) ^ 2) / n
     m4 <- sum((x - avg) ^ 4) / n
 
-    b2 <- m4 / (m2 ^ 2) # formula 5, kurtosis
+    g2 <- (m4 / (m2 ^ 2)) - 3
+    var_g2 <- 24 * n * (n - 2) * (n - 3) / ((n + 1) * (n + 1) * (n + 3) * (n + 5))
+    se_g2 <- sqrt(var_g2)
 
-    #---------------------------- Test of kurtosis ----------------------------#
-    mean_b2 <- 3 * (n - 1) / (n + 1)
-    var_b2 <- 24 * n * (n - 2) * (n - 3) / ((n + 1) * (n + 1) * (n + 3) * (n + 5))
-    se_b2 <- sqrt(var_b2 / n)
+    if (method == "g2")
+    {
+        kurt <- g2
+        se <- se_g2
+        Zk <- g2 / se
+    }
 
-    standardized_b2 <- (b2 - mean_b2) / sqrt(var_b2)
+    if (method == "G2")
+    {
+        kurt <- ((n - 1) * ((n + 1) * g2 + 6)) / ((n - 2) * (n - 3))
+        se <- ((n - 1) * (n + 1) / ((n - 2) * (n - 3))) * se_g2
+        Zk <- kurt / se
+    }
 
-    beta1 <- 6 * ((n ^ 2) - (5 * n) + 2) / ((n + 7) * (n + 9))
-    beta1 <- beta1 * sqrt(6 * (n + 3) * (n + 5) / (n * (n - 2) * (n - 3)))
-
-    # Be careful, the above `beta1` is square-rooted beta1
-    # The last part of A, the `beta1` in the denominator is not square-rooted.
-    A <- 6 + (8 / beta1) * ((2 / beta1) + sqrt(1 + (4 / (beta1 ^ 2))))
-
-    Zk_1 <- 1 - (2 / (9 * A))
-    Zk_2 <- (1 - (2 / A)) / (1 + standardized_b2 * sqrt(2 / (A - 4)))
-    Zk_3 <- sqrt(2 / (9 * A))
-    Zk <- (Zk_1 - (Zk_2 ^ (1 / 3))) / Zk_3 # kurtosis Z-value
+    if (method == "b2")
+    {
+        kurt <- (((n - 1) / n) ^ 2) * (m4 / (m2 ^ 2)) - 3
+        se <- (((n - 1) / n) ^ 2) * se_g2
+        Zk <- kurt / se
+    }
 
     pval <- stats::pnorm(Zk, lower.tail = FALSE) * 2
 
     if (alt == "two.sided")
     {
         Zk_pval <- if (pval > 1) 2 - pval else pval
-        critical_Zk <- stats::qnorm(1 - alpha / 2)
+        Zcrit <- stats::qnorm(1 - alpha / 2)
     }
 
-    if (alt == "less") # kurtosis < 3, the peak become rounder
+    if (alt == "less") # kurtosis < 3, low peak
     {
         Zk_pval <- pval / 2
-        critical_Zk <- stats::qnorm(1 - alpha)
+        Zcrit <- stats::qnorm(1 - alpha)
     }
 
-    if (alt == "greater") # kurtosis > 3, the peak become sharper
+    if (alt == "greater") # kurtosis > 3, high peak
     {
         Zk_pval <- 1 - pval / 2
-        critical_Zk <- stats::qnorm(alpha)
+        Zcrit <- stats::qnorm(alpha)
     }
 
-    CI_lower <- b2 - se_b2 * critical_Zk
-    CI_upper <- b2 + se_b2 * critical_Zk
+    kurt <- kurt + 3
+    CI_lower <- kurt - se * Zcrit
+    CI_upper <- kurt + se * Zcrit
 
-    summary_table <- data.frame(
+    tab <- data.frame(
         check.names = FALSE,
-        row.names = "kurtosis (b2)",
-        "statistic" = b2,
+        row.names = sprintf("kurtosis (%s)", method),
+        "statistic" = kurt,
         "Z" = Zk,
-        "Zcrit" = critical_Zk,
-        "SE" = se_b2,
+        "Zcrit" = Zcrit,
+        "SE" = se,
         "pval" = Zk_pval,
         "CI_lower" = CI_lower,
         "CI_upper" = CI_upper
     )
 
     normality_standard_output(
-        method = "D'Agostino's b2 kurtosis test",
-        bool = (Zk_pval > alpha),
+        method = sprintf("Kurtosis (%s) test", method),
+        is_normal = (Zk_pval > alpha),
         alpha = alpha,
         alternative = alt,
-        summary_table = summary_table,
-        statistic = c("b2" = b2, "Z(b2)" = Zk),
+        summary_table = tab,
+        statistic = stats::setNames(c(kurt, se), c(method, "SE")),
         pvalue = Zk_pval,
         confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
     )

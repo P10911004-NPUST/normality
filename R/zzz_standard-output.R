@@ -3,7 +3,7 @@
 #' The standard output format for `normality` package.
 #'
 #' @param method Character. The name of the test.
-#' @param bool Logical. Is the input data normally distributed?
+#' @param is_normal Logical. Is the input data normally distributed?
 #' @param alpha Numeric (default: 0.05). Significance threshold.
 #' @param alternative Character. The alternative hypothesis (H1) to test.
 #'      Available options are c("two.sided", "less", "greater").
@@ -15,7 +15,7 @@
 #' @returns A list contains 8 vectors.
 normality_standard_output <- function(
         method = "what test?",
-        bool = NA,
+        is_normal = NA,
         alpha = NA_real_,
         alternative = c("two.sided", "less", "greater"),
         summary_table = NULL,
@@ -26,7 +26,7 @@ normality_standard_output <- function(
     structure(
         .Data = list(
             "method" = method,
-            "bool" = bool,
+            "is_normal" = is_normal,
             "alpha" = alpha,
             "alternative" = alternative,
             "summary_table" = summary_table,

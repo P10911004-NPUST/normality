@@ -1,0 +1,21 @@
+test_that("D.Agostino_Pearson_test", {
+  dap_out <- D.Agostino_Pearson_test(cholesterol)
+
+  b1 <- round(dap_out[["summary_table"]][["statistic"]][[1]], 2)
+  b2 <- round(dap_out[["summary_table"]][["statistic"]][[2]], 2)
+  Zs <- round(dap_out[["summary_table"]][["Z"]][[1]], 2)
+  Zk <- round(dap_out[["summary_table"]][["Z"]][[2]], 2)
+  b1_pval <- round(dap_out[["summary_table"]][["pval"]][[1]], 4)
+  b2_pval <- round(dap_out[["summary_table"]][["pval"]][[2]], 4)
+  K2 <- round(dap_out[["statistic"]][["K2"]], 2)
+  pval <- round(dap_out[["pvalue"]], 4)
+
+  testthat::expect_equal(b1, 1.02)
+  testthat::expect_equal(b2, 4.58)
+  testthat::expect_equal(Zs, 3.14)
+  testthat::expect_equal(Zk, 2.21)
+  testthat::expect_equal(b1_pval, 0.0017)
+  testthat::expect_equal(b2_pval, 0.0269)
+  testthat::expect_equal(K2, 14.75)
+  testthat::expect_equal(pval, 0.0006)
+})

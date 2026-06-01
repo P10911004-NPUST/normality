@@ -38,8 +38,8 @@ confidence_interval: The lower and upper bound of CI.
 Kurtosis test
 }
 \examples{
-d1 <- c(10:17, 12, 12, 13, 13, 13, 13, 13, 14, 14, 14, 15, 15)
-kurtosis(d1)
+x <- c(10:17, 12, 12, 13, 13, 13, 13, 13, 14, 14, 14, 15, 15)
+kurtosis(x)
 }
 \references{
 Joanes, D.N., Gill, C.A., 1998.

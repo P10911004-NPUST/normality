@@ -9,7 +9,7 @@
 [![Downloads](https://cranlogs.r-pkg.org/badges/normality?color=blue)](https://cranlogs.r-pkg.org/badges/normality)
 <!-- badges: end -->
 
-`normality` is an R package as a toolkit of statistical approaches for assessing data normality.
+An R package as a toolkit of statistical approaches for assessing data normality.
 
 There are also other nice alternatives such as 
 [`nortest`](https://cran.r-project.org/package=nortest), 
@@ -17,15 +17,13 @@ There are also other nice alternatives such as
 [`moments`](https://cran.r-project.org/package=moments), 
 and other friends.
 
-<br>
+# Installation
 
-<!-- # Installation
-
-You can install the package from [CRAN](https://cran.r-project.org/package=normality) with:
+<!-- You can install the package from [CRAN](https://cran.r-project.org/package=normality) with:
 
 ``` r
 install.packages("normality")
-```
+``` -->
 
 or the developmental version from [GitHub](https://github.com/P10911004-NPUST/normality) with:
 
@@ -38,4 +36,20 @@ devtools::install_github("P10911004-NPUST/normality")
 # Quick start
 ```r
 D.Agostino_Pearson_test(cholesterol)
-``` -->
+```
+
+<br>
+
+# TODO
+- Implement functions:  
+  - [x] `skewness()`
+  - [x] `kurtosis()`
+  - [] `Anderson_Darling_test()`
+  - [] `Cramer_von_Mises_test()`
+  - [] `Lilliefors_test()`
+  - [x] `D.Agostino_Pearson_test()`
+  - [] `Jarque_Bera_test()`
+  - [] `Shapiro_Wilk_test()`
+  - [] `Shapiro_Francia_test()`
+  - [] `Shapiro_Wilk_Royston_test()`
+  - [] `Ryan_Joiner_test()`

@@ -49,11 +49,11 @@ D.Agostino_Pearson_test <- function(
 
     #-------------------------------- skewness --------------------------------#
     skew_out <- D.Agostino_skewness(x, alpha, alt)
-    Zs <- skew_out[["statistic"]][["Z(sqrt-b1)"]]
+    Zs <- skew_out[["summary_table"]][["Z"]]
 
     #-------------------------------- kurtosis --------------------------------#
     kurt_out <- D.Agostino_kurtosis(x, alpha, alt)
-    Zk <- kurt_out[["statistic"]][["Z(b2)"]]
+    Zk <- kurt_out[["summary_table"]][["Z"]]
 
     #-------------------------- K-square omnibus test -------------------------#
     K2 <- (Zs ^ 2) + (Zk ^ 2)
@@ -156,7 +156,7 @@ D.Agostino_skewness <- function(
         alpha = alpha,
         alternative = alt,
         summary_table = summary_table,
-        statistic = c("sqrt-b1" = b1, "Z(sqrt-b1)" = Zs),
+        statistic = c("sqrt-b1" = b1),
         pvalue = Zs_pval,
         confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
     )
@@ -182,7 +182,6 @@ D.Agostino_kurtosis <- function(
     #---------------------------- Test of kurtosis ----------------------------#
     mean_b2 <- 3 * (n - 1) / (n + 1)
     var_b2 <- 24 * n * (n - 2) * (n - 3) / ((n + 1) * (n + 1) * (n + 3) * (n + 5))
-    se_b2 <- sqrt(var_b2 / n)
 
     standardized_b2 <- (b2 - mean_b2) / sqrt(var_b2)
 
@@ -218,6 +217,12 @@ D.Agostino_kurtosis <- function(
         critical_Zk <- stats::qnorm(alpha)
     }
 
+    # D.Agostino use g2 as the kurtosis measure, but generally
+    # the unbiased version, i.e. G2, is applied to calculate the SE.
+    # Therefore, the SE(b2) is not calculated from var_b2, instead
+    # it is equal to kurtosis(x, method = "G2")
+    se_b2 <- 2 * (n - 1) * sqrt(6 * n / ((n - 2) * (n - 3) * (n + 3) * (n + 5)))
+
     CI_lower <- b2 - se_b2 * critical_Zk
     CI_upper <- b2 + se_b2 * critical_Zk
 
@@ -239,7 +244,7 @@ D.Agostino_kurtosis <- function(
         alpha = alpha,
         alternative = alt,
         summary_table = tab,
-        statistic = c("b2" = b2, "Z(b2)" = Zk),
+        statistic = c("b2" = b2),
         pvalue = Zk_pval,
         confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
     )

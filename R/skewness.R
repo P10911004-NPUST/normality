@@ -114,7 +114,7 @@ skewness <- function(
         alpha = alpha,
         alternative = alt,
         summary_table = tab,
-        statistic = stats::setNames(c(skew, se), c(method, "SE")),
+        statistic = stats::setNames(skew, method),
         pvalue = Zs_pval,
         confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
     )

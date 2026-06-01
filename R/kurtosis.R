@@ -19,8 +19,8 @@
 #' confidence_interval: The lower and upper bound of CI.
 #'
 #' @examples
-#' d1 <- c(10:17, 12, 12, 13, 13, 13, 13, 13, 14, 14, 14, 15, 15)
-#' kurtosis(d1)
+#' x <- c(10:17, 12, 12, 13, 13, 13, 13, 13, 14, 14, 14, 15, 15)
+#' kurtosis(x)
 #' @references
 #' Joanes, D.N., Gill, C.A., 1998.
 #' Comparing measures of sample skewness and kurtosis.
@@ -116,7 +116,7 @@ kurtosis <- function(
         alpha = alpha,
         alternative = alt,
         summary_table = tab,
-        statistic = stats::setNames(c(kurt, se), c(method, "SE")),
+        statistic = stats::setNames(kurt, method),
         pvalue = Zk_pval,
         confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
     )

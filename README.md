@@ -49,7 +49,8 @@ D.Agostino_Pearson_test(cholesterol)
   - [] `Lilliefors_test()`
   - [x] `D.Agostino_Pearson_test()`
   - [] `Jarque_Bera_test()`
-  - [] `Shapiro_Wilk_test()`
-  - [] `Shapiro_Francia_test()`
-  - [] `Shapiro_Wilk_Royston_test()`
-  - [] `Ryan_Joiner_test()`
+  - [] `Shapiro_Wilk_test()` with 3 alternatives:
+    - [Shapiro-Wilk](https://doi.org/10.2307/2333709)
+    - [Shapiro-Francia](https://doi.org/10.1080/01621459.1972.10481232)
+    - [Shapiro-Wilk-Royston](https://doi.org/10.1007/BF01891203)
+  - [] `Ryan_Joiner_test()` [pdf](https://www.additive-net.de/de/component/jdownloads/send/70-support/236-normal-probability-plots-and-tests-for-normality-thomas-a-ryan-jr-bryan-l-joiner)

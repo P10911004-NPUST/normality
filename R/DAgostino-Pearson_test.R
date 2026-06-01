@@ -1,6 +1,6 @@
-#' D'Agostino-Pearson K2 test for normal distribution inferences.
+#' D'Agostino-Pearson chi square test of data normality.
 #'
-#' The D'Agostino–Pearson K<sup>2</sup> test is a statistical test for assessing whether a sample comes from a normal distribution.
+#' The D'Agostino–Pearson chi square (K<sup>2</sup>) test is a statistical test for assessing whether a sample comes from a normal distribution.
 #' It combines information from:
 #' - skewness (asymmetry)
 #' - kurtosis (tail heaviness)

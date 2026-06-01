@@ -2,7 +2,7 @@
 % Please edit documentation in R/DAgostino-Pearson_test.R
 \name{D.Agostino_Pearson_test}
 \alias{D.Agostino_Pearson_test}
-\title{D'Agostino-Pearson K2 test for normal distribution inferences.}
+\title{D'Agostino-Pearson chi square test of data normality.}
 \usage{
 D.Agostino_Pearson_test(
   x,
@@ -34,7 +34,7 @@ pvalue: p-value.
 confidence_interval: The lower and upper bound of CI.
 }
 \description{
-The D'Agostino–Pearson K\if{html}{\out{<sup>}}2\if{html}{\out{</sup>}} test is a statistical test for assessing whether a sample comes from a normal distribution.
+The D'Agostino–Pearson chi square (K\if{html}{\out{<sup>}}2\if{html}{\out{</sup>}}) test is a statistical test for assessing whether a sample comes from a normal distribution.
 It combines information from:
 \itemize{
 \item skewness (asymmetry)

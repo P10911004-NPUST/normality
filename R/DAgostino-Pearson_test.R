@@ -1,27 +1,26 @@
-#' D'Agostino-Pearson chi square test of data normality.
+#' D'Agostino-Pearson K<sup>2</sup> Normality Test
 #'
-#' The D'Agostino–Pearson chi square (K<sup>2</sup>) test is a statistical test for assessing whether a sample comes from a normal distribution.
-#' It combines information from:
-#' - skewness (asymmetry)
-#' - kurtosis (tail heaviness)
+#' The D'Agostino–Pearson Chi-square (K<sup>2</sup>) test is a statistical test for
+#' assessing whether a sample comes from a normal distribution.
+#' It combines information from skewness (asymmetry) and kurtosis (tail heaviness)
 #' into a single omnibus test statistic.
 #'
 #' @param x A numeric vector.
 #' @param alpha Significance threshold (default: 0.05).
 #' @param alternative Character (default: "two.sided).
 #'      The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").
-#'      Note that, this is only applicable on skewness and kurtosis test, not functioning on the omnibus K-square test.
+#'      Note that, this is only applied on skewness and kurtosis test.
 #' @param min_n Integer. The minimum observations required (default: 20).
 #'
 #' @returns A list:
-#' is_normal: Is the input data normally distributed?
-#' method: The name of the test.
-#' alpha: Significance threshold (default: 0.05).
-#' alternative: The alternative hypothesis (H1) to test.
-#' summary_table: Statistic summary, if any.
-#' statistic: The value used to calculate p-value.
-#' pvalue: p-value.
-#' confidence_interval: The lower and upper bound of CI.
+#' - is_normal: Is the input data normally distributed?
+#' - method: The name of the test.
+#' - alpha: Significance threshold (default: 0.05).
+#' - alternative: The alternative hypothesis (H1) to test.
+#' - summary_table: Statistic summary, if any. Mostly output as a data frame.
+#' - statistic: The value used to calculate p-value.
+#' - pvalue: The <i>p</i> value.
+#' - confidence_interval: The lower and upper bound of confidence interval (CI).
 #'
 #' @examples
 #' D.Agostino_Pearson_test(cholesterol)
@@ -74,7 +73,7 @@ D.Agostino_Pearson_test <- function(
     tab <- rbind(skew_out[["summary_table"]], kurt_out[["summary_table"]], tab)
 
     normality_standard_output(
-        method = "D'Agostino-Pearson K2 omnibus test",
+        method = "D'Agostino-Pearson omnibus K2 normality test",
         is_normal = (pval > 0.05),
         alpha = alpha,
         alternative = alt,

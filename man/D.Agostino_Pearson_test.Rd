@@ -2,7 +2,7 @@
 % Please edit documentation in R/DAgostino-Pearson_test.R
 \name{D.Agostino_Pearson_test}
 \alias{D.Agostino_Pearson_test}
-\title{D'Agostino-Pearson chi square test of data normality.}
+\title{D'Agostino-Pearson K\if{html}{\out{<sup>}}2\if{html}{\out{</sup>}} Normality Test}
 \usage{
 D.Agostino_Pearson_test(
   x,
@@ -18,29 +18,28 @@ D.Agostino_Pearson_test(
 
 \item{alternative}{Character (default: "two.sided).
 The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").
-Note that, this is only applicable on skewness and kurtosis test, not functioning on the omnibus K-square test.}
+Note that, this is only applied on skewness and kurtosis test.}
 
 \item{min_n}{Integer. The minimum observations required (default: 20).}
 }
 \value{
 A list:
-is_normal: Is the input data normally distributed?
-method: The name of the test.
-alpha: Significance threshold (default: 0.05).
-alternative: The alternative hypothesis (H1) to test.
-summary_table: Statistic summary, if any.
-statistic: The value used to calculate p-value.
-pvalue: p-value.
-confidence_interval: The lower and upper bound of CI.
+\itemize{
+\item is_normal: Is the input data normally distributed?
+\item method: The name of the test.
+\item alpha: Significance threshold (default: 0.05).
+\item alternative: The alternative hypothesis (H1) to test.
+\item summary_table: Statistic summary, if any. Mostly output as a data frame.
+\item statistic: The value used to calculate p-value.
+\item pvalue: The \if{html}{\out{<i>}}p\if{html}{\out{</i>}} value.
+\item confidence_interval: The lower and upper bound of confidence interval (CI).
+}
 }
 \description{
-The D'Agostino–Pearson chi square (K\if{html}{\out{<sup>}}2\if{html}{\out{</sup>}}) test is a statistical test for assessing whether a sample comes from a normal distribution.
-It combines information from:
-\itemize{
-\item skewness (asymmetry)
-\item kurtosis (tail heaviness)
+The D'Agostino–Pearson Chi-square (K\if{html}{\out{<sup>}}2\if{html}{\out{</sup>}}) test is a statistical test for
+assessing whether a sample comes from a normal distribution.
+It combines information from skewness (asymmetry) and kurtosis (tail heaviness)
 into a single omnibus test statistic.
-}
 }
 \examples{
 D.Agostino_Pearson_test(cholesterol)

@@ -12,3 +12,14 @@
 "cholesterol"
 
 
+#' Leghorn chicken data
+#'
+#' A numeric vector
+#'
+#' @format A numeric vector length of 20.
+#'
+#' @references
+#' D’Agostino, RalphB., 2017.
+#' Goodness-of-Fit Techniques, page 98 (Table 4.1). 1st ed. Routledge.
+#' https://doi.org/10.1201/9780203753064
+"leghorn_chick"

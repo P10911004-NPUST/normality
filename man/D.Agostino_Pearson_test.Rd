@@ -46,8 +46,8 @@ D.Agostino_Pearson_test(cholesterol)
 
 }
 \references{
-D’agostino, R.B., Belanger, A., D’agostino, R.B., 1990.
+D’Agostino, R.B., Belanger, A., D’Agostino, R.B., 1990.
 A Suggestion for Using Powerful and Informative Tests of Normality.
-The American Statistician 44, 316–321.
+Am. Stat. 44, 316–321.
 https://doi.org/10.1080/00031305.1990.10475751
 }

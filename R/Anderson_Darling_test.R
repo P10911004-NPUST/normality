@@ -3,6 +3,7 @@
 #' @param x A numeric vector.
 #' @param alpha Numeric (default: 0.05). Significance threshold, range from 0 to 1.
 #' @param verbose Logical (default: FALSE). Show messages.
+#' @param min_n Integer. The minimum observations required (default: 8).
 #'
 #' @returns A list:
 #' - is_normal: Is the input data normally distributed?
@@ -18,13 +19,30 @@
 #' Anderson_Darling_test(leghorn_chick)
 #'
 #' @references
-#' D’Agostino, RalphB., 2017.
-#' Goodness-of-Fit Techniques, page 123-128 & 372-373. 1st ed. Routledge.
+#' D’Agostino, R.B., 2017. Tests for the Normal Distribution.
+#' In: D’Agostino, R.B., Stephens, M.A. (Eds.),
+#' Goodness-of-Fit Techniques, 1st ed. Routledge, New York,
+#' pp. 372–373.
 #' https://doi.org/10.1201/9780203753064
+#'
+#' Stephens, M.A., 2017. Tests Based on EDF Statistics.
+#' In: D’Agostino, R.B., Stephens, M.A. (Eds.),
+#' Goodness-of-Fit Techniques, 1st ed. Routledge, New York,
+#' pp. 126–128.
+#' https://doi.org/10.1201/9780203753064
+#'
+#' Anderson, T.W., Darling, D.A., 1954.
+#' A Test of Goodness of Fit.
+#' J. Am. Stat. Assoc. 49, 765–769.
+#' https://doi.org/10.1080/01621459.1954.10501232
 
 #' @export
-Anderson_Darling_test <- function(x, alpha = 0.05, verbose = FALSE)
-{
+Anderson_Darling_test <- function(
+        x,
+        alpha = 0.05,
+        min_n = 8,
+        verbose = FALSE
+) {
     x <- sort(x[stats::complete.cases(x)], decreasing = FALSE)
     n <- length(x)
     i <- seq_along(x)
@@ -32,8 +50,8 @@ Anderson_Darling_test <- function(x, alpha = 0.05, verbose = FALSE)
     std <- stats::sd(x)
     Z <- (x - avg) / std # Y(i) in formula 9.9
 
-    if (n < 8)
-        warning("Anderson-Darling test requires at least 8 observations.")
+    if (n < min_n)
+        warning(sprintf("Anderson-Darling test is inappropriate for n < %s", min_n))
 
     Pi_lower <- stats::pnorm(Z)
     Pi_upper <- rev(stats::pnorm(Z, lower.tail = FALSE))
@@ -63,16 +81,24 @@ Anderson_Darling_test <- function(x, alpha = 0.05, verbose = FALSE)
 
     A2crit <- .calc_A2_crit(pval, n, verbose)
 
-    tab <- data.frame(
-        check.names = FALSE,
-        row.names = sprintf("Anderson-Darling (A2)"),
-        "statistic" = A2,
-        "modified-A2" = mA2,
-        "A2crit" = A2crit,
-        "SE" = NA_real_,
-        "pval" = pval,
-        "CI_lower" = NA_real_,
-        "CI_upper" = NA_real_
+    # tab <- data.frame(
+    #     check.names = FALSE,
+    #     row.names = sprintf("Anderson-Darling (A2)"),
+    #     "statistic" = A2,
+    #     "modified-A2" = mA2,
+    #     "A2crit" = A2crit,
+    #     "SE" = NA_real_,
+    #     "pval" = pval,
+    #     "CI_lower" = NA_real_,
+    #     "CI_upper" = NA_real_
+    # )
+
+    tab <- normality_standard_summary_table(
+        row_names = "Anderson-Darling (A2)",
+        statistic = A2,
+        critical_value = A2crit,
+        pval = pval,
+        "modified-A2" = mA2
     )
 
     normality_standard_output(
@@ -102,27 +128,24 @@ Anderson_Darling_test <- function(x, alpha = 0.05, verbose = FALSE)
     }
 
     q_ <- round(c(seq(0.05, 0.95, 0.05), .975, .99, .995), 4)
-    b0_ <- c(
-        -0.512, -0.552, -0.608, -0.643, -0.707,
-        -0.735, -0.772, -0.770, -0.778, -0.779,
-        -0.803, -0.818, -0.818, -0.801, -0.800,
-        -0.756, -0.749, -0.750, -0.795, -0.881,
-        -1.013, -1.063
-    )
-    b1_ <- c(
-        2.10,  1.25,  1.07,  0.93,  1.03,
-        1.02,  1.04,  0.90,  0.80,  0.67,
-        0.70,  0.58,  0.42,  0.12, -0.09,
-        -0.39, -0.59, -0.80, -0.89, -0.94,
-        -0.93, -1.34
-    )
-    asymp_ <- c(
-        0.1674, 0.1938, 0.2147, 0.2333, 0.2509,
-        0.2681, 0.2853, 0.3030, 0.3213, 0.3405,
-        0.3612, 0.3836, 0.4085, 0.4367, 0.4695,
-        0.5091, 0.5597, 0.6305, 0.7514, 0.8728,
-        1.0348, 1.1578
-    )
+
+    b0_ <- c(-0.512, -0.552, -0.608, -0.643, -0.707,
+             -0.735, -0.772, -0.770, -0.778, -0.779,
+             -0.803, -0.818, -0.818, -0.801, -0.800,
+             -0.756, -0.749, -0.750, -0.795, -0.881,
+             -1.013, -1.063)
+
+    b1_ <- c(2.10,  1.25,  1.07,  0.93,  1.03,
+             1.02,  1.04,  0.90,  0.80,  0.67,
+             0.70,  0.58,  0.42,  0.12, -0.09,
+             -0.39, -0.59, -0.80, -0.89, -0.94,
+             -0.93, -1.34)
+
+    asymp_ <- c(0.1674, 0.1938, 0.2147, 0.2333, 0.2509,
+                0.2681, 0.2853, 0.3030, 0.3213, 0.3405,
+                0.3612, 0.3836, 0.4085, 0.4367, 0.4695,
+                0.5091, 0.5597, 0.6305, 0.7514, 0.8728,
+                1.0348, 1.1578)
 
     qval <- round(1 - pval, 4)
     ind <- which(qval == q_)
@@ -131,7 +154,14 @@ Anderson_Darling_test <- function(x, alpha = 0.05, verbose = FALSE)
         ind <- sum(qval > q_)
         b0 <- mean(c(b0_[ind], b0_[ind + 1]))
         b1 <- mean(c(b0_[ind], b0_[ind + 1]))
-        asymp <- mean(c(asymp_[ind], asymp_[ind + 1]))
+        # asymp <- mean(c(asymp_[ind], asymp_[ind + 1]))
+
+        # interpolate() <<< from utils.R
+        asymp <- interpolate(idx_i = qval,
+                             idx_1 = q_[ind],
+                             idx_2 = q_[ind + 1],
+                             val_1 = asymp_[ind],
+                             val_2 = asymp_[ind + 1])
     } else {
         b0 <- b0_[ind]
         b1 <- b1_[ind]

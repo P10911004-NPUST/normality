@@ -2,5 +2,7 @@
 
 export(Anderson_Darling_test)
 export(D.Agostino_Pearson_test)
+export(Shapiro_Wilk_test)
+export(is_tied)
 export(kurtosis)
 export(skewness)

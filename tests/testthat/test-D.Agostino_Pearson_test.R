@@ -3,8 +3,8 @@ test_that("D.Agostino_Pearson_test", {
 
   b1 <- round(dap_out[["summary_table"]][["statistic"]][[1]], 2)
   b2 <- round(dap_out[["summary_table"]][["statistic"]][[2]], 2)
-  Zs <- round(dap_out[["summary_table"]][["Z"]][[1]], 2)
-  Zk <- round(dap_out[["summary_table"]][["Z"]][[2]], 2)
+  Zs <- round(dap_out[["summary_table"]][["standard_value"]][[1]], 2)
+  Zk <- round(dap_out[["summary_table"]][["standard_value"]][[2]], 2)
   b1_pval <- round(dap_out[["summary_table"]][["pval"]][[1]], 4)
   b2_pval <- round(dap_out[["summary_table"]][["pval"]][[2]], 4)
   K2 <- round(dap_out[["statistic"]][["K2"]], 2)

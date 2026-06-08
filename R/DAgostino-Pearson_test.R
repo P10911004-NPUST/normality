@@ -26,9 +26,9 @@
 #' D.Agostino_Pearson_test(cholesterol)
 #'
 #' @references
-#' D’agostino, R.B., Belanger, A., D’agostino, R.B., 1990.
+#' D’Agostino, R.B., Belanger, A., D’Agostino, R.B., 1990.
 #' A Suggestion for Using Powerful and Informative Tests of Normality.
-#' The American Statistician 44, 316–321.
+#' Am. Stat. 44, 316–321.
 #' https://doi.org/10.1080/00031305.1990.10475751
 #' @export
 D.Agostino_Pearson_test <- function(
@@ -44,30 +44,41 @@ D.Agostino_Pearson_test <- function(
     avg <- mean(x)
 
     if (n < min_n)
-        warning(sprintf("Sample size less than %s, this test is inappropriate.", min_n))
+        warning(sprintf("D'Agostino-Pearson test is inappropriate for n < %s", min_n))
 
     #-------------------------------- skewness --------------------------------#
     skew_out <- D.Agostino_skewness(x, alpha, alt)
-    Zs <- skew_out[["summary_table"]][["Z"]]
+    Zs <- skew_out[["summary_table"]][["standard_value"]]
 
     #-------------------------------- kurtosis --------------------------------#
     kurt_out <- D.Agostino_kurtosis(x, alpha, alt)
-    Zk <- kurt_out[["summary_table"]][["Z"]]
+    # Zk <- kurt_out[["summary_table"]][["Z"]]
+    Zk <- kurt_out[["summary_table"]][["standard_value"]]
 
     #-------------------------- K-square omnibus test -------------------------#
     K2 <- (Zs ^ 2) + (Zk ^ 2)
     pval <- stats::pchisq(K2, df = 2, lower.tail = FALSE)
+    critical_K2 <- stats::qchisq(alpha, df = 2, lower.tail = FALSE)
 
-    tab <- data.frame(
-        check.names = FALSE,
-        row.names = sprintf("omnibus (K2)"),
-        "statistic" = K2,
-        "Z" = NA_real_,
-        "Zcrit" = NA_real_,
-        "SE" = NA_real_,
-        "pval" = pval,
-        "CI_lower" = NA_real_,
-        "CI_upper" = NA_real_
+    # tab <- data.frame(
+    #     check.names = FALSE,
+    #     row.names = sprintf("omnibus (K2)"),
+    #     "statistic" = K2,
+    #     "Z" = NA_real_,
+    #     "Zcrit" = NA_real_,
+    #     "SE" = NA_real_,
+    #     "pval" = pval,
+    #     "CI_lower" = NA_real_,
+    #     "CI_upper" = NA_real_
+    # )
+
+    tab <- normality_standard_summary_table(
+        method = "omnibus (K2)",
+        alpha = alpha,
+        statistic = K2,
+        pval = pval,
+        standard_value = K2,
+        critical_value = critical_K2
     )
 
     tab <- rbind(skew_out[["summary_table"]], kurt_out[["summary_table"]], tab)
@@ -137,16 +148,28 @@ D.Agostino_skewness <- function(
     CI_lower <- b1 - se * critical_Zs
     CI_upper <- b1 + se * critical_Zs
 
-    summary_table <- data.frame(
-        check.names = FALSE,
-        row.names = "skewness (sqrt-b1)",
-        "statistic" = b1,
-        "Z" = Zs,
-        "Zcrit" = critical_Zs,
-        "SE" = se,
-        "pval" = Zs_pval,
-        "CI_lower" = CI_lower,
-        "CI_upper" = CI_upper
+    # tab <- data.frame(
+    #     check.names = FALSE,
+    #     row.names = "skewness (sqrt-b1)",
+    #     "statistic" = b1,
+    #     "Z" = Zs,
+    #     "Zcrit" = critical_Zs,
+    #     "SE" = se,
+    #     "pval" = Zs_pval,
+    #     "CI_lower" = CI_lower,
+    #     "CI_upper" = CI_upper
+    # )
+
+    tab <- normality_standard_summary_table(
+        method = "skewness (sqrt-b1)",
+        alpha = alpha,
+        statistic = b1,
+        pval = Zs_pval,
+        standard_value = Zs,
+        critical_value = critical_Zs,
+        SE = se,
+        CI_lower = CI_lower,
+        CI_upper = CI_upper
     )
 
     normality_standard_output(
@@ -154,7 +177,7 @@ D.Agostino_skewness <- function(
         is_normal = (Zs_pval > alpha),
         alpha = alpha,
         alternative = alt,
-        summary_table = summary_table,
+        summary_table = tab,
         statistic = c("sqrt-b1" = b1),
         pvalue = Zs_pval,
         confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
@@ -225,16 +248,28 @@ D.Agostino_kurtosis <- function(
     CI_lower <- b2 - se_b2 * critical_Zk
     CI_upper <- b2 + se_b2 * critical_Zk
 
-    tab <- data.frame(
-        check.names = FALSE,
-        row.names = "kurtosis (b2)",
-        "statistic" = b2,
-        "Z" = Zk,
-        "Zcrit" = critical_Zk,
-        "SE" = se_b2,
-        "pval" = Zk_pval,
-        "CI_lower" = CI_lower,
-        "CI_upper" = CI_upper
+    # tab <- data.frame(
+    #     check.names = FALSE,
+    #     row.names = "kurtosis (b2)",
+    #     "statistic" = b2,
+    #     "Z" = Zk,
+    #     "Zcrit" = critical_Zk,
+    #     "SE" = se_b2,
+    #     "pval" = Zk_pval,
+    #     "CI_lower" = CI_lower,
+    #     "CI_upper" = CI_upper
+    # )
+
+    tab <- normality_standard_summary_table(
+        method = "kurtosis (b2)",
+        alpha = alpha,
+        statistic = b2,
+        pval = Zk_pval,
+        standard_value = Zk,
+        critical_value = critical_Zk,
+        SE = se_b2,
+        CI_lower = CI_lower,
+        CI_upper = CI_upper
     )
 
     normality_standard_output(

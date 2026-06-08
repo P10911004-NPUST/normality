@@ -3,7 +3,7 @@
 \docType{data}
 \name{leghorn_chick}
 \alias{leghorn_chick}
-\title{Leghorn chick data}
+\title{Leghorn chicken data}
 \format{
 A numeric vector length of 20.
 }
@@ -14,8 +14,10 @@ leghorn_chick
 A numeric vector
 }
 \references{
-D’Agostino, RalphB., 2017.
-Goodness-of-Fit Techniques, page 98 (Table 4.1). 1st ed. Routledge.
+Stephens, M.A., 2017. Tests Based on EDF Statistics.
+In: D’Agostino, R.B., Stephens, M.A. (Eds.),
+Goodness-of-Fit Techniques, 1st ed. Routledge, New York,
+pp. 98.
 https://doi.org/10.1201/9780203753064
 }
 \keyword{datasets}

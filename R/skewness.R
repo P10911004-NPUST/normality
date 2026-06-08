@@ -23,12 +23,12 @@
 #' @references
 #' Joanes, D.N., Gill, C.A., 1998.
 #' Comparing measures of sample skewness and kurtosis.
-#' J Royal Statistical Soc D 47, 183–189.
+#' J. R. Stat. Soc. D (The Statistician) 47, 183–189.
 #' https://doi.org/10.1111/1467-9884.00122
 #'
 #' Wright, D.B., Herrington, J.A., 2011.
 #' Problematic standard errors and confidence intervals for skewness and kurtosis.
-#' Behav Res 43, 8–17.
+#' Behav. Res. Methods 43, 8–17.
 #' https://doi.org/10.3758/s13428-010-0044-x
 #' @export
 skewness <- function(
@@ -96,16 +96,28 @@ skewness <- function(
     CI_lower <- skew - se * Zcrit
     CI_upper <- skew + se * Zcrit
 
-    tab <- data.frame(
-        check.names = FALSE,
-        row.names = sprintf("skewness (%s)", method),
-        "statistic" = skew,
-        "Z" = Zs,
-        "Zcrit" = Zcrit,
-        "SE" = se,
-        "pval" = Zs_pval,
-        "CI_lower" = CI_lower,
-        "CI_upper" = CI_upper
+    # tab <- data.frame(
+    #     check.names = FALSE,
+    #     row.names = sprintf("skewness (%s)", method),
+    #     "statistic" = skew,
+    #     "Z" = Zs,
+    #     "Zcrit" = Zcrit,
+    #     "SE" = se,
+    #     "pval" = Zs_pval,
+    #     "CI_lower" = CI_lower,
+    #     "CI_upper" = CI_upper
+    # )
+
+    tab <- normality_standard_summary_table(
+        method = sprintf("skewness (%s)", method),
+        alpha = alpha,
+        statistic = skew,
+        pval = Zs_pval,
+        standard_value = Zs,
+        critical_value = Zcrit,
+        SE = se,
+        CI_lower = CI_lower,
+        CI_upper = CI_upper
     )
 
     normality_standard_output(

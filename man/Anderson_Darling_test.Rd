@@ -4,12 +4,14 @@
 \alias{Anderson_Darling_test}
 \title{Anderson-Darling Normality Test}
 \usage{
-Anderson_Darling_test(x, alpha = 0.05, verbose = FALSE)
+Anderson_Darling_test(x, alpha = 0.05, min_n = 8, verbose = FALSE)
 }
 \arguments{
 \item{x}{A numeric vector.}
 
 \item{alpha}{Numeric (default: 0.05). Significance threshold, range from 0 to 1.}
+
+\item{min_n}{Integer. The minimum observations required (default: 8).}
 
 \item{verbose}{Logical (default: FALSE). Show messages.}
 }
@@ -34,7 +36,20 @@ Anderson_Darling_test(leghorn_chick)
 
 }
 \references{
-D’Agostino, RalphB., 2017.
-Goodness-of-Fit Techniques, page 123-128 & 372-373. 1st ed. Routledge.
+D’Agostino, R.B., 2017. Tests for the Normal Distribution.
+In: D’Agostino, R.B., Stephens, M.A. (Eds.),
+Goodness-of-Fit Techniques, 1st ed. Routledge, New York,
+pp. 372–373.
 https://doi.org/10.1201/9780203753064
+
+Stephens, M.A., 2017. Tests Based on EDF Statistics.
+In: D’Agostino, R.B., Stephens, M.A. (Eds.),
+Goodness-of-Fit Techniques, 1st ed. Routledge, New York,
+pp. 126–128.
+https://doi.org/10.1201/9780203753064
+
+Anderson, T.W., Darling, D.A., 1954.
+A Test of Goodness of Fit.
+J. Am. Stat. Assoc. 49, 765–769.
+https://doi.org/10.1080/01621459.1954.10501232
 }

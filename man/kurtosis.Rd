@@ -44,11 +44,11 @@ kurtosis(x)
 \references{
 Joanes, D.N., Gill, C.A., 1998.
 Comparing measures of sample skewness and kurtosis.
-J Royal Statistical Soc D 47, 183–189.
+J. R. Stat. Soc. D (The Statistician) 47, 183–189.
 https://doi.org/10.1111/1467-9884.00122
 
 Wright, D.B., Herrington, J.A., 2011.
 Problematic standard errors and confidence intervals for skewness and kurtosis.
-Behav Res 43, 8–17.
+Behav. Res. Methods 43, 8–17.
 https://doi.org/10.3758/s13428-010-0044-x
 }

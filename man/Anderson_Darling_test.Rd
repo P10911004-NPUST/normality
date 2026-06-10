@@ -4,32 +4,21 @@
 \alias{Anderson_Darling_test}
 \title{Anderson-Darling Normality Test}
 \usage{
-Anderson_Darling_test(x, alpha = 0.05, min_n = 8, verbose = FALSE)
+Anderson_Darling_test(x, alpha = 0.05, silent = FALSE)
 }
 \arguments{
 \item{x}{A numeric vector.}
 
 \item{alpha}{Numeric (default: 0.05). Significance threshold, range from 0 to 1.}
 
-\item{min_n}{Integer. The minimum observations required (default: 8).}
-
-\item{verbose}{Logical (default: FALSE). Show messages.}
+\item{silent}{Logical (default: FALSE). If \code{FALSE}, print out the results.}
 }
 \value{
-A list:
-\itemize{
-\item is_normal: Is the input data normally distributed?
-\item method: The name of the test.
-\item alpha: Significance threshold (default: 0.05).
-\item alternative: The alternative hypothesis (H1) to test.
-\item summary_table: Statistic summary, if any. Mostly output as a data frame.
-\item statistic: The value used to calculate p-value.
-\item pvalue: The \if{html}{\out{<i>}}p\if{html}{\out{</i>}} value.
-\item confidence_interval: The lower and upper bound of confidence interval (CI).
-}
+A list.
 }
 \description{
-Anderson-Darling Normality Test
+Performs the Anderson-Darling (A2) normality test which is based on the
+empirical distribution function (EDF).
 }
 \examples{
 Anderson_Darling_test(leghorn_chick)

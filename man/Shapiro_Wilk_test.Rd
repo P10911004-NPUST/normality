@@ -4,30 +4,69 @@
 \alias{Shapiro_Wilk_test}
 \title{Shapiro-Wilk Normality Test}
 \usage{
-Shapiro_Wilk_test(x, alpha = 0.05, method = c("swr", "sf", "sw"))
+Shapiro_Wilk_test(
+  x,
+  alpha = 0.05,
+  method = c("SWR", "SF", "SW"),
+  silent = FALSE
+)
 }
 \arguments{
 \item{x}{A numeric vector.}
 
 \item{alpha}{Significance threshold (default: 0.05).}
 
-\item{method}{Character (default: "swr"). Use which modification of the test?
-Available options are c("swr", "sf", "sw").}
+\item{method}{Character (default: "SWR"). Use which modification of the test?
+Available options are c("SWR", "SF", "SW").}
+
+\item{silent}{Logical (default: FALSE). If \code{FALSE}, print out the results.}
 }
 \value{
 A list.
 }
 \description{
-Performs the Shapiro-Wilk test of normality.
+Performs the Shapiro-Wilk normality test which is based on the regression and
+correlation technique.
 }
 \details{
 method
 \itemize{
-\item "swr": Shapiro-Wilk-Royston, extended by Royston.
-\item "sf": Shapiro-Francia, modified by Francia.
-\item "sw": Shapiro-Wilk, the original test.
+\item "SW": Shapiro-Wilk, the original test (\verb{Shapiro and Wilk, 1965}).
+Only applicable when 3 <= n <= 50.
+\item "SF": Shapiro-Francia, modified by Francia (\verb{Shapiro and Francia, 1972}),
+and finally simplified and extended by Royston (\verb{Royston, 1993}).
+Only applicable when 5 <= n <= 5000.
+\item "SWR": Shapiro-Wilk-Royston, modified by Royston (\verb{Royston, 1995}).
+Only applicable when 3 <= n <= 5000.
 }
 }
 \examples{
-Shapiro_Wilk_test(rnorm(20), method = "sw")
+Shapiro_Wilk_test(rnorm(20), method = "SW")
+}
+\references{
+Shapiro, S.S., Wilk, M.B., 1965.
+An Analysis of Variance Test for Normality (Complete Samples).
+Biometrika 52, 591–611.
+https://doi.org/10.2307/2333709
+
+Shapiro, S.S., Francia, R.S., 1972.
+An Approximate Analysis of Variance Test for Normality.
+J. Am. Stat. Assoc. 67, 215–216.
+https://doi.org/10.1080/01621459.1972.10481232
+
+Royston, P., 1993.
+A pocket-calculator algorithm for the Shapiro–Francia test for non-normality:
+an application to medicine.
+Stat. Med. 12, 181–184.
+https://doi.org/10.1002/sim.4780120209
+
+Royston, P., 1992.
+Approximating the Shapiro–Wilk W-test for non-normality.
+Stat. Comput. 2, 117–119.
+https://doi.org/10.1007/BF01891203
+
+Royston, P., 1995.
+Remark AS R94: A Remark on Algorithm AS 181: The W-test for Normality.
+Appl. Stat. 44, 547–551.
+https://doi.org/10.2307/2986146
 }

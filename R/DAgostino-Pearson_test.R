@@ -1,6 +1,6 @@
 #' D'Agostino-Pearson K<sup>2</sup> Normality Test
 #'
-#' The D'Agostino–Pearson Chi-square (K<sup>2</sup>) test is a statistical test for
+#' The D'Agostino–Pearson Chi-square (K<sup>2</sup>) test is a moment test for
 #' assessing whether a sample comes from a normal distribution.
 #' It combines information from skewness (asymmetry) and kurtosis (tail heaviness)
 #' into a single omnibus test statistic.
@@ -10,17 +10,9 @@
 #' @param alternative Character (default: "two.sided).
 #'      The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").
 #'      Note that, this is only applied on skewness and kurtosis test.
-#' @param min_n Integer. The minimum observations required (default: 20).
+#' @param silent Logical (default: FALSE). If `FALSE`, print out the results.
 #'
-#' @returns A list:
-#' - is_normal: Is the input data normally distributed?
-#' - method: The name of the test.
-#' - alpha: Significance threshold (default: 0.05).
-#' - alternative: The alternative hypothesis (H1) to test.
-#' - summary_table: Statistic summary, if any. Mostly output as a data frame.
-#' - statistic: The value used to calculate p-value.
-#' - pvalue: The <i>p</i> value.
-#' - confidence_interval: The lower and upper bound of confidence interval (CI).
+#' @returns A list
 #'
 #' @examples
 #' D.Agostino_Pearson_test(cholesterol)
@@ -35,7 +27,7 @@ D.Agostino_Pearson_test <- function(
         x,
         alpha = 0.05,
         alternative = c("two.sided", "less", "greater"),
-        min_n = 20
+        silent = FALSE
 ) {
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
 
@@ -43,8 +35,8 @@ D.Agostino_Pearson_test <- function(
     n <- length(x)
     avg <- mean(x)
 
-    if (n < min_n)
-        warning(sprintf("D'Agostino-Pearson test is inappropriate for n < %s", min_n))
+    if (n < 20)
+        warning("D'Agostino-Pearson test may be inappropriate for n < 20")
 
     #-------------------------------- skewness --------------------------------#
     skew_out <- D.Agostino_skewness(x, alpha, alt)
@@ -60,31 +52,27 @@ D.Agostino_Pearson_test <- function(
     pval <- stats::pchisq(K2, df = 2, lower.tail = FALSE)
     critical_K2 <- stats::qchisq(alpha, df = 2, lower.tail = FALSE)
 
-    # tab <- data.frame(
-    #     check.names = FALSE,
-    #     row.names = sprintf("omnibus (K2)"),
-    #     "statistic" = K2,
-    #     "Z" = NA_real_,
-    #     "Zcrit" = NA_real_,
-    #     "SE" = NA_real_,
-    #     "pval" = pval,
-    #     "CI_lower" = NA_real_,
-    #     "CI_upper" = NA_real_
-    # )
-
     tab <- normality_standard_summary_table(
-        method = "omnibus (K2)",
+        method = "D'Agostino-Pearson (K2)",
         alpha = alpha,
         statistic = K2,
         pval = pval,
         standard_value = K2,
-        critical_value = critical_K2
+        critical_value = critical_K2,
+        N = n,
+        AVG = avg,
+        MED = stats::median(x),
+        MIN = min(x),
+        MAX = max(x),
+        SD = stats::sd(x)
     )
 
-    tab <- rbind(skew_out[["summary_table"]], kurt_out[["summary_table"]], tab)
+    tab <- rbind(skew_out[["summary_table"]],
+                 kurt_out[["summary_table"]],
+                 tab)
 
-    normality_standard_output(
-        method = "D'Agostino-Pearson omnibus K2 normality test",
+    ret <- normality_standard_output(
+        method = "D'Agostino-Pearson K2 normality test",
         is_normal = (pval > 0.05),
         alpha = alpha,
         alternative = alt,
@@ -92,6 +80,22 @@ D.Agostino_Pearson_test <- function(
         statistic = c("K2" = K2),
         pvalue = pval
     )
+
+    if (isFALSE(silent))
+    {
+        cat("\n--------------------------------------\n")
+        cat("D'Agostino-Pearson (K2) normality test", "\n\n")
+        cat("Alternative:", alt, "\n\n")
+        cat("Skewness =", round(skew_out[["statistic"]], 5), "; ",
+            "p-value =", round(skew_out[["pvalue"]]), "\n")
+        cat("Kurtosis =", round(kurt_out[["statistic"]], 5), "; ",
+            "p-value =", round(kurt_out[["pvalue"]]), "\n\n")
+        cat("Statistic (K2) =", round(K2, 5), "\n")
+        cat("p-value =", round(pval, 6))
+        cat("\n--------------------------------------\n")
+    }
+
+    invisible(ret)
 }
 
 
@@ -148,18 +152,6 @@ D.Agostino_skewness <- function(
     CI_lower <- b1 - se * critical_Zs
     CI_upper <- b1 + se * critical_Zs
 
-    # tab <- data.frame(
-    #     check.names = FALSE,
-    #     row.names = "skewness (sqrt-b1)",
-    #     "statistic" = b1,
-    #     "Z" = Zs,
-    #     "Zcrit" = critical_Zs,
-    #     "SE" = se,
-    #     "pval" = Zs_pval,
-    #     "CI_lower" = CI_lower,
-    #     "CI_upper" = CI_upper
-    # )
-
     tab <- normality_standard_summary_table(
         method = "skewness (sqrt-b1)",
         alpha = alpha,
@@ -169,11 +161,17 @@ D.Agostino_skewness <- function(
         critical_value = critical_Zs,
         SE = se,
         CI_lower = CI_lower,
-        CI_upper = CI_upper
+        CI_upper = CI_upper,
+        N = n,
+        AVG = avg,
+        MED = stats::median(x),
+        MIN = min(x),
+        MAX = max(x),
+        SD = stats::sd(x)
     )
 
     normality_standard_output(
-        method = "D'Agostino's b1 skewness test",
+        method = "D'Agostino b1 skewness test",
         is_normal = (Zs_pval > alpha),
         alpha = alpha,
         alternative = alt,
@@ -248,18 +246,6 @@ D.Agostino_kurtosis <- function(
     CI_lower <- b2 - se_b2 * critical_Zk
     CI_upper <- b2 + se_b2 * critical_Zk
 
-    # tab <- data.frame(
-    #     check.names = FALSE,
-    #     row.names = "kurtosis (b2)",
-    #     "statistic" = b2,
-    #     "Z" = Zk,
-    #     "Zcrit" = critical_Zk,
-    #     "SE" = se_b2,
-    #     "pval" = Zk_pval,
-    #     "CI_lower" = CI_lower,
-    #     "CI_upper" = CI_upper
-    # )
-
     tab <- normality_standard_summary_table(
         method = "kurtosis (b2)",
         alpha = alpha,
@@ -269,11 +255,17 @@ D.Agostino_kurtosis <- function(
         critical_value = critical_Zk,
         SE = se_b2,
         CI_lower = CI_lower,
-        CI_upper = CI_upper
+        CI_upper = CI_upper,
+        N = n,
+        AVG = avg,
+        MED = stats::median(x),
+        MIN = min(x),
+        MAX = max(x),
+        SD = stats::sd(x)
     )
 
     normality_standard_output(
-        method = "D'Agostino's b2 kurtosis test",
+        method = "D'Agostino b2 kurtosis test",
         is_normal = (Zk_pval > alpha),
         alpha = alpha,
         alternative = alt,

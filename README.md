@@ -20,11 +20,11 @@ and other friends.
 
 # Installation
 
-<!-- You can install the package from [CRAN](https://cran.r-project.org/package=normality) with:
+You can install the package from [CRAN](https://cran.r-project.org/package=normality) with:
 
 ``` r
 install.packages("normality")
-``` -->
+```
 
 or the developmental version from [GitHub](https://github.com/P10911004-NPUST/normality) with:
 

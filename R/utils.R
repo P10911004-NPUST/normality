@@ -77,6 +77,12 @@ normality_standard_summary_table <- function(
         SE = NA_real_,
         CI_lower = NA_real_,
         CI_upper = NA_real_,
+        N = NA_real_,
+        AVG = NA_real_,
+        MED = NA_real_,
+        MIN = NA_real_,
+        MAX = NA_real_,
+        SD = NA_real_,
         ...
 ) {
     data.frame(check.names = FALSE,
@@ -89,6 +95,12 @@ normality_standard_summary_table <- function(
                "SE" = SE,
                "CI_lower" = CI_lower,
                "CI_upper" = CI_upper,
+               "N" = N,
+               "AVG" = AVG,
+               "MED" = MED,
+               "MIN" = MIN,
+               "MAX" = MAX,
+               "SD" = SD,
                ...)
 }
 

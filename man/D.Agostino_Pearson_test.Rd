@@ -8,7 +8,7 @@ D.Agostino_Pearson_test(
   x,
   alpha = 0.05,
   alternative = c("two.sided", "less", "greater"),
-  min_n = 20
+  silent = FALSE
 )
 }
 \arguments{
@@ -20,23 +20,13 @@ D.Agostino_Pearson_test(
 The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").
 Note that, this is only applied on skewness and kurtosis test.}
 
-\item{min_n}{Integer. The minimum observations required (default: 20).}
+\item{silent}{Logical (default: FALSE). If \code{FALSE}, print out the results.}
 }
 \value{
-A list:
-\itemize{
-\item is_normal: Is the input data normally distributed?
-\item method: The name of the test.
-\item alpha: Significance threshold (default: 0.05).
-\item alternative: The alternative hypothesis (H1) to test.
-\item summary_table: Statistic summary, if any. Mostly output as a data frame.
-\item statistic: The value used to calculate p-value.
-\item pvalue: The \if{html}{\out{<i>}}p\if{html}{\out{</i>}} value.
-\item confidence_interval: The lower and upper bound of confidence interval (CI).
-}
+A list
 }
 \description{
-The D'Agostino–Pearson Chi-square (K\if{html}{\out{<sup>}}2\if{html}{\out{</sup>}}) test is a statistical test for
+The D'Agostino–Pearson Chi-square (K\if{html}{\out{<sup>}}2\if{html}{\out{</sup>}}) test is a moment test for
 assessing whether a sample comes from a normal distribution.
 It combines information from skewness (asymmetry) and kurtosis (tail heaviness)
 into a single omnibus test statistic.

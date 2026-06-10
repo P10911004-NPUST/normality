@@ -1,19 +1,13 @@
 #' Anderson-Darling Normality Test
 #'
+#' Performs the Anderson-Darling (A2) normality test which is based on the
+#' empirical distribution function (EDF).
+#'
 #' @param x A numeric vector.
 #' @param alpha Numeric (default: 0.05). Significance threshold, range from 0 to 1.
-#' @param verbose Logical (default: FALSE). Show messages.
-#' @param min_n Integer. The minimum observations required (default: 8).
+#' @param silent Logical (default: FALSE). If `FALSE`, print out the results.
 #'
-#' @returns A list:
-#' - is_normal: Is the input data normally distributed?
-#' - method: The name of the test.
-#' - alpha: Significance threshold (default: 0.05).
-#' - alternative: The alternative hypothesis (H1) to test.
-#' - summary_table: Statistic summary, if any. Mostly output as a data frame.
-#' - statistic: The value used to calculate p-value.
-#' - pvalue: The <i>p</i> value.
-#' - confidence_interval: The lower and upper bound of confidence interval (CI).
+#' @returns A list.
 #'
 #' @examples
 #' Anderson_Darling_test(leghorn_chick)
@@ -35,13 +29,11 @@
 #' A Test of Goodness of Fit.
 #' J. Am. Stat. Assoc. 49, 765–769.
 #' https://doi.org/10.1080/01621459.1954.10501232
-
 #' @export
 Anderson_Darling_test <- function(
         x,
         alpha = 0.05,
-        min_n = 8,
-        verbose = FALSE
+        silent = FALSE
 ) {
     x <- sort(x[stats::complete.cases(x)], decreasing = FALSE)
     n <- length(x)
@@ -50,8 +42,8 @@ Anderson_Darling_test <- function(
     std <- stats::sd(x)
     Z <- (x - avg) / std # Y(i) in formula 9.9
 
-    if (n < min_n)
-        warning(sprintf("Anderson-Darling test is inappropriate for n < %s", min_n))
+    if (n < 8)
+        warning("Anderson-Darling test is inappropriate for n < 8")
 
     Pi_lower <- stats::pnorm(Z)
     Pi_upper <- rev(stats::pnorm(Z, lower.tail = FALSE))
@@ -65,43 +57,38 @@ Anderson_Darling_test <- function(
         pval <- 1 - exp(-8.318 + (42.796 * mA2) - (59.938 * mA2 * mA2))
     else if (mA2 < 0.6)
         pval <- exp(0.9177 - (4.279 * mA2) - (1.38 * mA2 * mA2))
-    else if (mA2 < 8)
+    else if (mA2 < 20)
+        # If the modified A2 (mA2) is too large, the output pval may be smaller
+        # than the smallest positive floating-point that the machine usually can
+        # handle precisely. See `.Machine[["double.xmin"]]`.
         pval <- exp(1.2937 - (5.709 * mA2) + (0.0186 * mA2 * mA2))
     else {
-        # If the modified A2 (mA2) is too large, the output pval may be smaller than the
-        # smallest positive floating-point that the machine usually can handle precisely.
+        # # When mA2 >= 20, the pval <= 1.604182e-46, directly assign as zero
         # for (i in 1:20) {
         #     ret <- exp(1.2937 - (5.709 * i) + (0.0186 * i * i))
+        #     # if (ret < .Machine$double.eps) break
         #     print(sprintf("%s: %e", i, ret))
-        #     if (ret < .Machine$double.eps) break
         # }
-        if (isTRUE(verbose)) message("The p-value is too small.")
         pval <- 0
     }
 
-    A2crit <- .calc_A2_crit(pval, n, verbose)
-
-    # tab <- data.frame(
-    #     check.names = FALSE,
-    #     row.names = sprintf("Anderson-Darling (A2)"),
-    #     "statistic" = A2,
-    #     "modified-A2" = mA2,
-    #     "A2crit" = A2crit,
-    #     "SE" = NA_real_,
-    #     "pval" = pval,
-    #     "CI_lower" = NA_real_,
-    #     "CI_upper" = NA_real_
-    # )
+    A2crit <- .calc_A2_crit(alpha, n)
 
     tab <- normality_standard_summary_table(
-        row_names = "Anderson-Darling (A2)",
+        method = "Anderson-Darling (A2)",
         statistic = A2,
+        standard_value = mA2,
         critical_value = A2crit,
         pval = pval,
-        "modified-A2" = mA2
+        N = n,
+        AVG = avg,
+        MED = stats::median(x),
+        MIN = min(x),
+        MAX = max(x),
+        SD = stats::sd(x)
     )
 
-    normality_standard_output(
+    ret <- normality_standard_output(
         method = "Anderson-Darling normality test",
         is_normal = (pval > alpha),
         alpha = alpha,
@@ -110,24 +97,25 @@ Anderson_Darling_test <- function(
         statistic = c("A2" = A2),
         pvalue = pval
     )
+
+    if (isFALSE(silent))
+    {
+        cat("\n------------------------------------\n")
+        cat("Anderson-Darling (A2) normality test", "\n\n")
+        cat("Statistic (A2) =", round(A2, 5), "\n")
+        cat("p-value =", round(pval, 6))
+        cat("\n------------------------------------\n")
+    }
+
+    invisible(ret)
 }
 
 
-.calc_A2_crit <- function(pval, n, verbose = FALSE)
+.calc_A2_crit <- function(alpha, n)
 {
-    if (pval > 0.95) {
-        if (isTRUE(verbose))
-            message("p-value is too-large, the critical value is not precise.")
-        pval <- 0.95
-    }
-
-    if (pval < 0.005) {
-        if (isTRUE(verbose))
-            message("p-value is too small, the critical value is not precise.")
-        pval <- 0.005
-    }
-
-    q_ <- round(c(seq(0.05, 0.95, 0.05), .975, .99, .995), 4)
+    alpha <- round(alpha, 4)
+    q_ref <- round(c(seq(0.05, 0.95, 0.05), .975, .99, .995), 4)
+    p_ref <- round(1 - q_ref, 4)
 
     b0_ <- c(-0.512, -0.552, -0.608, -0.643, -0.707,
              -0.735, -0.772, -0.770, -0.778, -0.779,
@@ -147,25 +135,31 @@ Anderson_Darling_test <- function(
                 0.5091, 0.5597, 0.6305, 0.7514, 0.8728,
                 1.0348, 1.1578)
 
-    qval <- round(1 - pval, 4)
-    ind <- which(qval == q_)
-    if (length(ind) == 0)
+    if (any(alpha == p_ref))
     {
-        ind <- sum(qval > q_)
-        b0 <- mean(c(b0_[ind], b0_[ind + 1]))
-        b1 <- mean(c(b0_[ind], b0_[ind + 1]))
-        # asymp <- mean(c(asymp_[ind], asymp_[ind + 1]))
-
-        # interpolate() <<< from utils.R
-        asymp <- interpolate(idx_i = qval,
-                             idx_1 = q_[ind],
-                             idx_2 = q_[ind + 1],
-                             val_1 = asymp_[ind],
-                             val_2 = asymp_[ind + 1])
-    } else {
+        ind <- which(alpha == p_ref)
         b0 <- b0_[ind]
         b1 <- b1_[ind]
         asymp <- asymp_[ind]
+    } else {
+        ind <- sum(alpha < p_ref)
+        b0 <- interpolate(idx_i = alpha,
+                          idx_1 = p_ref[ind],
+                          idx_2 = p_ref[ind + 1],
+                          val_1 = b0_[ind],
+                          val_2 = b0_[ind + 1])
+
+        b1 <- interpolate(idx_i = alpha,
+                          idx_1 = p_ref[ind],
+                          idx_2 = p_ref[ind + 1],
+                          val_1 = b1_[ind],
+                          val_2 = b1_[ind + 1])
+
+        asymp <- interpolate(idx_i = alpha,
+                             idx_1 = p_ref[ind],
+                             idx_2 = p_ref[ind + 1],
+                             val_1 = asymp_[ind],
+                             val_2 = asymp_[ind + 1])
     }
 
     A2crit <- asymp * (1 + (b0 / n) + (b1 / (n * n)))

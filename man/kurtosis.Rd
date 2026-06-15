@@ -8,34 +8,40 @@ kurtosis(
   x,
   alpha = 0.05,
   alternative = c("two.sided", "less", "greater"),
-  method = c("G2", "b2", "g2")
+  method = c("G2", "b2", "g2"),
+  silent = FALSE
 )
 }
 \arguments{
-\item{x}{Numeric vector. The input data.}
+\item{x}{Numeric vector containing the input data.}
 
-\item{alpha}{Numeric (default: 0.05). Significance threshold (0 - 1).}
+\item{alpha}{Numeric (default: 0.05). Significance level for hypothesis
+testing. Must be between 0 and 1.}
 
-\item{alternative}{Character (default: "two.sided).
-The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").}
+\item{alternative}{Character (default: "two.sided").
+Specifies the alternative hypothesis. Available options are
+c("two.sided", "less", "greater").}
 
-\item{method}{Character (default: "G2"). Different skewness formula.
-Available options are c("G2", "b2", "g2"). The "g2" is the original one.
-The "G2" and "b2" are the unbiased estimate version of "g2".}
+\item{method}{Character (default: "G2"). Formula used to estimate
+kurtosis. Available options are c("G2", "b2", "g2").
+The "g2" statistic is the classical sample kurtosis estimator,
+while "G2" and "b2" are bias-corrected versions of "g2".}
+
+\item{silent}{Logical (default: FALSE). If \code{FALSE}, results are printed
+to the console.}
 }
 \value{
-A list:
-is_normal: Is the input data normally distributed?
-method: The name of the test.
-alpha: Significance threshold (default: 0.05).
-alternative: The alternative hypothesis (H1) to test.
-summary_table: Statistic summary, if any.
-statistic: The value used to calculate p-value.
-pvalue: p-value.
-confidence_interval: The lower and upper bound of CI.
+A list
 }
 \description{
-Kurtosis test
+Performs a kurtosis test to assess whether a distribution deviates from
+normality in terms of tail heaviness.
+}
+\details{
+The test evaluates the null hypothesis that the population kurtosis is
+equal to 3, which is the kurtosis of a normal distribution.
+Values significantly different from 3 indicate deviations from normality,
+such as heavy-tailed or light-tailed behavior.
 }
 \examples{
 x <- c(10:17, 12, 12, 13, 13, 13, 13, 13, 14, 14, 14, 15, 15)

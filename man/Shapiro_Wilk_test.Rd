@@ -8,7 +8,8 @@ Shapiro_Wilk_test(
   x,
   alpha = 0.05,
   method = c("SWR", "SF", "SW"),
-  silent = FALSE
+  silent = FALSE,
+  resampling = TRUE
 )
 }
 \arguments{
@@ -20,28 +21,41 @@ Shapiro_Wilk_test(
 Available options are c("SWR", "SF", "SW").}
 
 \item{silent}{Logical (default: FALSE). If \code{FALSE}, print out the results.}
+
+\item{resampling}{Logical (default: TRUE).
+If \code{TRUE}, unlock the sample size limitation of the test by using
+sample resampling method.}
 }
 \value{
 A list.
 }
 \description{
-Performs the Shapiro-Wilk normality test which is based on the regression and
-correlation technique.
+Performs the Shapiro–Wilk normality test, which assesses whether a sample
+originates from a normally distributed population using a regression-based
+correlation method.
 }
 \details{
 method
 \itemize{
-\item "SW": Shapiro-Wilk, the original test (\verb{Shapiro and Wilk, 1965}).
-Only applicable when 3 <= n <= 50.
-\item "SF": Shapiro-Francia, modified by Francia (\verb{Shapiro and Francia, 1972}),
-and finally simplified and extended by Royston (\verb{Royston, 1993}).
-Only applicable when 5 <= n <= 5000.
-\item "SWR": Shapiro-Wilk-Royston, modified by Royston (\verb{Royston, 1995}).
-Only applicable when 3 <= n <= 5000.
+\item "SW": Shapiro–Wilk test, the original normality test proposed by
+Shapiro and Wilk (1965). Applicable only for sample sizes
+3 <= n <= 50.
+\item "SF": Shapiro–Francia test, proposed by Shapiro and Francia (1972)
+and subsequently simplified and extended by Royston (1993).
+Applicable only for sample sizes 5 <= n <= 5000.
+\item "SWR": Shapiro–Wilk test with Royston's (1992) modifications for
+approximating the null distribution and extending the test
+to larger sample sizes. Applicable only for sample sizes
+3 <= n <= 5000.
 }
 }
 \examples{
-Shapiro_Wilk_test(rnorm(20), method = "SW")
+sw <- Shapiro_Wilk_test(rnorm(20), method = "SW")
+print(sw$summary)
+sf <- Shapiro_Wilk_test(rnorm(100) ^ 2, method = "SF")
+print(sf$summary)
+swr <- Shapiro_Wilk_test(rnorm(1e6), method = "SWR")
+print(swr$summary)
 }
 \references{
 Shapiro, S.S., Wilk, M.B., 1965.
@@ -64,9 +78,4 @@ Royston, P., 1992.
 Approximating the Shapiro–Wilk W-test for non-normality.
 Stat. Comput. 2, 117–119.
 https://doi.org/10.1007/BF01891203
-
-Royston, P., 1995.
-Remark AS R94: A Remark on Algorithm AS 181: The W-test for Normality.
-Appl. Stat. 44, 547–551.
-https://doi.org/10.2307/2986146
 }

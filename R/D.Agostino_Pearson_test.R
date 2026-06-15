@@ -1,21 +1,27 @@
-#' D'Agostino-Pearson K<sup>2</sup> Normality Test
+#' D'Agostino–Pearson K<sup>2</sup> Normality Test
 #'
-#' The D'Agostino–Pearson Chi-square (K<sup>2</sup>) test is a moment test for
-#' assessing whether a sample comes from a normal distribution.
-#' It combines information from skewness (asymmetry) and kurtosis (tail heaviness)
-#' into a single omnibus test statistic.
+#' The D'Agostino–Pearson chi-squared (K<sup>2</sup>) test is a moment-based
+#' omnibus test for normality.
 #'
-#' @param x A numeric vector.
-#' @param alpha Significance threshold (default: 0.05).
-#' @param alternative Character (default: "two.sided).
-#'      The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").
-#'      Note that, this is only applied on skewness and kurtosis test.
-#' @param silent Logical (default: FALSE). If `FALSE`, print out the results.
+#' It evaluates the null hypothesis that the data come from a normal distribution
+#' by combining standardized measures of skewness and kurtosis into a single
+#' chi-squared test statistic.
+#'
+#' @param x Numeric vector. Must have length at least 20.
+#' @param alpha Numeric (default: 0.05). Significance level for hypothesis testing.
+#'        Must be between 0 and 1.
+#' @param alternative Character (default: "two.sided").
+#'        Specifies the alternative hypothesis. Available options are
+#'        c("two.sided", "less", "greater"). Note that this option is only applied
+#'        to the skewness and kurtosis components of the test.
+#' @param silent Logical (default: FALSE). If `FALSE`, results are printed
+#'        to the console.
 #'
 #' @returns A list
 #'
 #' @examples
-#' D.Agostino_Pearson_test(cholesterol)
+#' out <- D.Agostino_Pearson_test(rnorm(50))
+#' print(out$summary)
 #'
 #' @references
 #' D’Agostino, R.B., Belanger, A., D’Agostino, R.B., 1990.
@@ -35,17 +41,14 @@ D.Agostino_Pearson_test <- function(
     n <- length(x)
     avg <- mean(x)
 
-    if (n < 20)
-        warning("D'Agostino-Pearson test may be inappropriate for n < 20")
-
     #-------------------------------- skewness --------------------------------#
     skew_out <- D.Agostino_skewness(x, alpha, alt)
-    Zs <- skew_out[["summary_table"]][["standard_value"]]
+    Zs <- skew_out[["summary"]][["standard_value"]]
 
     #-------------------------------- kurtosis --------------------------------#
     kurt_out <- D.Agostino_kurtosis(x, alpha, alt)
     # Zk <- kurt_out[["summary_table"]][["Z"]]
-    Zk <- kurt_out[["summary_table"]][["standard_value"]]
+    Zk <- kurt_out[["summary"]][["standard_value"]]
 
     #-------------------------- K-square omnibus test -------------------------#
     K2 <- (Zs ^ 2) + (Zk ^ 2)
@@ -57,6 +60,7 @@ D.Agostino_Pearson_test <- function(
         alpha = alpha,
         statistic = K2,
         pval = pval,
+        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
         standard_value = K2,
         critical_value = critical_K2,
         N = n,
@@ -67,8 +71,8 @@ D.Agostino_Pearson_test <- function(
         SD = stats::sd(x)
     )
 
-    tab <- rbind(skew_out[["summary_table"]],
-                 kurt_out[["summary_table"]],
+    tab <- rbind(skew_out[["summary"]],
+                 kurt_out[["summary"]],
                  tab)
 
     ret <- normality_standard_output(
@@ -76,7 +80,7 @@ D.Agostino_Pearson_test <- function(
         is_normal = (pval > 0.05),
         alpha = alpha,
         alternative = alt,
-        summary_table = tab,
+        summary = tab,
         statistic = c("K2" = K2),
         pvalue = pval
     )
@@ -86,12 +90,12 @@ D.Agostino_Pearson_test <- function(
         cat("\n--------------------------------------\n")
         cat("D'Agostino-Pearson (K2) normality test", "\n\n")
         cat("Alternative:", alt, "\n\n")
-        cat("Skewness =", round(skew_out[["statistic"]], 5), "; ",
-            "p-value =", round(skew_out[["pvalue"]]), "\n")
-        cat("Kurtosis =", round(kurt_out[["statistic"]], 5), "; ",
-            "p-value =", round(kurt_out[["pvalue"]]), "\n\n")
-        cat("Statistic (K2) =", round(K2, 5), "\n")
-        cat("p-value =", round(pval, 6))
+        cat("Skewness =", round(skew_out[["statistic"]], 4), "; ",
+            "p-value =", round(skew_out[["pvalue"]], 5), "\n")
+        cat("Kurtosis =", round(kurt_out[["statistic"]], 4), "; ",
+            "p-value =", round(kurt_out[["pvalue"]], 5), "\n\n")
+        cat("Statistic (K2) =", round(K2, 4), "\n")
+        cat("p-value =", round(pval, 5))
         cat("\n--------------------------------------\n")
     }
 
@@ -109,6 +113,9 @@ D.Agostino_skewness <- function(
     n <- length(x)
     avg <- mean(x)
     se <- sqrt((6 * n * (n - 1)) / ((n - 2) * (n + 1) * (n + 3))) # skewness (G1)
+
+    if (n < 9)
+        warning("D'Agostino-Pearson skewness test may be inappropriate for n < 9")
 
     #----------------------------- Sample moments -----------------------------#
     m2 <- sum((x - avg) ^ 2) / n # formula 6
@@ -157,6 +164,7 @@ D.Agostino_skewness <- function(
         alpha = alpha,
         statistic = b1,
         pval = Zs_pval,
+        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
         standard_value = Zs,
         critical_value = critical_Zs,
         SE = se,
@@ -175,10 +183,9 @@ D.Agostino_skewness <- function(
         is_normal = (Zs_pval > alpha),
         alpha = alpha,
         alternative = alt,
-        summary_table = tab,
+        summary = tab,
         statistic = c("sqrt-b1" = b1),
-        pvalue = Zs_pval,
-        confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
+        pvalue = Zs_pval
     )
 }
 
@@ -192,6 +199,9 @@ D.Agostino_kurtosis <- function(
     x <- x[stats::complete.cases(x)]
     n <- length(x)
     avg <- mean(x)
+
+    if (x[1] - x[n] == 0) stop("All values are identical.")
+    if (n < 20) warning("D'Agostino-Pearson test is inappropriate for n < 20")
 
     #----------------------------- Sample moments -----------------------------#
     m2 <- sum((x - avg) ^ 2) / n
@@ -251,6 +261,7 @@ D.Agostino_kurtosis <- function(
         alpha = alpha,
         statistic = b2,
         pval = Zk_pval,
+        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
         standard_value = Zk,
         critical_value = critical_Zk,
         SE = se_b2,
@@ -269,9 +280,8 @@ D.Agostino_kurtosis <- function(
         is_normal = (Zk_pval > alpha),
         alpha = alpha,
         alternative = alt,
-        summary_table = tab,
+        summary = tab,
         statistic = c("b2" = b2),
-        pvalue = Zk_pval,
-        confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
+        pvalue = Zk_pval
     )
 }

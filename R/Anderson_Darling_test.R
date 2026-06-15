@@ -1,16 +1,18 @@
 #' Anderson-Darling Normality Test
 #'
-#' Performs the Anderson-Darling (A2) normality test which is based on the
-#' empirical distribution function (EDF).
+#' Performs the Anderson–Darling (A<sup>2</sup>) normality test, an EDF-based
+#' goodness-of-fit test that gives greater weight to deviations in the tails
+#' of the distribution.
 #'
-#' @param x A numeric vector.
+#' @param x A numeric vector, at least length of 8.
 #' @param alpha Numeric (default: 0.05). Significance threshold, range from 0 to 1.
 #' @param silent Logical (default: FALSE). If `FALSE`, print out the results.
 #'
 #' @returns A list.
 #'
 #' @examples
-#' Anderson_Darling_test(leghorn_chick)
+#' out <- Anderson_Darling_test(rnorm(10))
+#' print(out$summary)
 #'
 #' @references
 #' D’Agostino, R.B., 2017. Tests for the Normal Distribution.
@@ -42,8 +44,8 @@ Anderson_Darling_test <- function(
     std <- stats::sd(x)
     Z <- (x - avg) / std # Y(i) in formula 9.9
 
-    if (n < 8)
-        warning("Anderson-Darling test is inappropriate for n < 8")
+    if (x[1] - x[n] == 0) stop("All values are identical.")
+    if (n < 8) warning("Anderson-Darling test is inappropriate for n < 8")
 
     Pi_lower <- stats::pnorm(Z)
     Pi_upper <- rev(stats::pnorm(Z, lower.tail = FALSE))
@@ -80,6 +82,7 @@ Anderson_Darling_test <- function(
         standard_value = mA2,
         critical_value = A2crit,
         pval = pval,
+        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
         N = n,
         AVG = avg,
         MED = stats::median(x),
@@ -93,7 +96,7 @@ Anderson_Darling_test <- function(
         is_normal = (pval > alpha),
         alpha = alpha,
         alternative = "greater",
-        summary_table = tab,
+        summary = tab,
         statistic = c("A2" = A2),
         pvalue = pval
     )
@@ -102,8 +105,8 @@ Anderson_Darling_test <- function(
     {
         cat("\n------------------------------------\n")
         cat("Anderson-Darling (A2) normality test", "\n\n")
-        cat("Statistic (A2) =", round(A2, 5), "\n")
-        cat("p-value =", round(pval, 6))
+        cat("Statistic (A2) =", round(A2, 4), "\n")
+        cat("p-value =", round(pval, 5))
         cat("\n------------------------------------\n")
     }
 

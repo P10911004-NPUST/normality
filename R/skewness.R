@@ -1,25 +1,29 @@
 #' Skewness test
 #'
-#' @param x Numeric vector. The input data.
-#' @param alpha Numeric (default: 0.05). Significance threshold (0 - 1).
-#' @param alternative Character (default: "two.sided).
-#'      The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").
-#' @param method Character (default: "G1"). Different skewness formula.
-#'      Available options are c("G1", "b1", "g1"). The "g1" is the original one.
-#'      The "G1" and "b1" are the unbiased estimate version of "g1".
+#' The test evaluates whether the population skewness is equal to zero.
+#' Under the null hypothesis, the data are assumed to originate from a
+#' symmetric distribution. Significant positive or negative skewness
+#' indicates asymmetry in the distribution and may suggest a departure
+#' from normality.
 #'
-#' @returns A list:
-#' is_normal: Is the input data normally distributed?
-#' method: The name of the test.
-#' alpha: Significance threshold (default: 0.05).
-#' alternative: The alternative hypothesis (H1) to test.
-#' summary_table: Statistic summary, if any.
-#' statistic: The value used to calculate p-value.
-#' pvalue: p-value.
-#' confidence_interval: The lower and upper bound of CI.
+#' @param x Numeric vector containing the input data.
+#' @param alpha Numeric (default: 0.05). Significance level for hypothesis
+#'   testing. Must be between 0 and 1.
+#' @param alternative Character (default: "two.sided").
+#'   Specifies the alternative hypothesis. Available options are
+#'   c("two.sided", "less", "greater").
+#' @param method Character (default: "G1"). Formula used to estimate
+#'   skewness. Available options are c("G1", "b1", "g1").
+#'   The "g1" statistic is the conventional moment-based sample skewness.
+#'   The "G1" and "b1" statistics apply finite-sample corrections to reduce
+#'   the bias of "g1".
+#' @param silent Logical (default: FALSE). If `FALSE`, the test results are
+#'   printed to the console.
+#'
+#' @returns A list
 #'
 #' @examples
-#' skewness(cholesterol)
+#' skewness(rnorm(30))
 #' @references
 #' Joanes, D.N., Gill, C.A., 1998.
 #' Comparing measures of sample skewness and kurtosis.
@@ -35,15 +39,17 @@ skewness <- function(
         x,
         alpha = 0.05,
         alternative = c("two.sided", "less", "greater"),
-        method = c("G1", "b1", "g1")
+        method = c("G1", "b1", "g1"),
+        silent = FALSE
 ){
-    stopifnot(alpha >= 0 & alpha <= 1)
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
     method <- match.arg(method[1], c("G1", "b1", "g1"))
 
     x <- x[stats::complete.cases(x)]
     n <- length(x)
     avg <- mean(x)
+
+    if (x[1] - x[n] == 0) stop("All values are identical.")
 
     m2 <- sum((x - avg) ^ 2) / n
     m3 <- sum((x - avg) ^ 3) / n
@@ -96,23 +102,12 @@ skewness <- function(
     CI_lower <- skew - se * Zcrit
     CI_upper <- skew + se * Zcrit
 
-    # tab <- data.frame(
-    #     check.names = FALSE,
-    #     row.names = sprintf("skewness (%s)", method),
-    #     "statistic" = skew,
-    #     "Z" = Zs,
-    #     "Zcrit" = Zcrit,
-    #     "SE" = se,
-    #     "pval" = Zs_pval,
-    #     "CI_lower" = CI_lower,
-    #     "CI_upper" = CI_upper
-    # )
-
     tab <- normality_standard_summary_table(
         method = sprintf("skewness (%s)", method),
         alpha = alpha,
         statistic = skew,
         pval = Zs_pval,
+        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
         standard_value = Zs,
         critical_value = Zcrit,
         SE = se,
@@ -120,16 +115,27 @@ skewness <- function(
         CI_upper = CI_upper
     )
 
-    normality_standard_output(
+    ret <- normality_standard_output(
         method = sprintf("Skewness (%s) test", method),
         is_normal = (Zs_pval > alpha),
         alpha = alpha,
         alternative = alt,
-        summary_table = tab,
+        summary = tab,
         statistic = stats::setNames(skew, method),
-        pvalue = Zs_pval,
-        confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
+        pvalue = Zs_pval
     )
+
+    if (isFALSE(silent))
+    {
+        cat("\n--------------------------------------\n")
+        cat("Skewness test", "\n\n")
+        cat("Alternative:", alt, "\n\n")
+        cat(sprintf("Skewness (%s) = %s\n", method, round(skew, 4)))
+        cat(sprintf("p-value = %s", round(pval, 5)))
+        cat("\n--------------------------------------\n")
+    }
+
+    invisible(ret)
 }
 
 

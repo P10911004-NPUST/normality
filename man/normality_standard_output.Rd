@@ -9,10 +9,9 @@ normality_standard_output(
   is_normal = NA,
   alpha = NA_real_,
   alternative = c("two.sided", "less", "greater"),
-  summary_table = NULL,
+  summary = NULL,
   statistic = NA_real_,
-  pvalue = NA_real_,
-  confidence_interval = c(lower = NA_real_, upper = NA_real_)
+  pvalue = NA_real_
 )
 }
 \arguments{
@@ -25,16 +24,14 @@ normality_standard_output(
 \item{alternative}{Character. The alternative hypothesis (H1) to test.
 Available options are c("two.sided", "less", "greater").}
 
-\item{summary_table}{Statistic summary, if any.}
+\item{summary}{Statistic summary, if any.}
 
 \item{statistic}{Numeric. The value used to calculate p-value.}
 
 \item{pvalue}{Numeric. The p-value of the test.}
-
-\item{confidence_interval}{Numeric vector of length 2. The lower and upper bound of CI.}
 }
 \value{
-A list contains 8 vectors.
+A list.
 }
 \description{
 The standard output format for \code{normality} package.

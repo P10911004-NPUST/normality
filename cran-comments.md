@@ -1,5 +1,12 @@
-## R CMD check results
+## Patch-release
 
-0 errors | 0 warnings | 1 note
+This is a patch release,
 
-* This is a new release.
+0 errors ✔ | 0 warnings ✔ | 0 note ✔
+
+which makes several changes:
+
+* Modified output format and improved functions' documentation.
+* Implement `Shapiro_Wilk_test()`.
+* Implement a handy wrapper: `is_normal()`.
+

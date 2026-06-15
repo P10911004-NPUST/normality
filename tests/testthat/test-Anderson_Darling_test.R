@@ -1,12 +1,14 @@
 test_that("Anderson-Darling test", {
-    out <- Anderson_Darling_test(leghorn_chick)
+    leghorn_chick <- c(156, 162, 168, 182, 186, 190, 190, 196, 202, 210,
+                       214, 220, 226, 230, 230, 236, 236, 242, 246, 270)
+    out <- Anderson_Darling_test(leghorn_chick, silent = TRUE)
     A2 <- round(out[["statistic"]][["A2"]], 3)
-    mA2 <- round(out[["summary_table"]][["standard_value"]], 3)
+    mA2 <- round(out[["summary"]][["standard_value"]], 3)
     pval <- round(out[["pvalue"]], 3)
 
-    expect_equal(A2, 0.214)
-    expect_equal(mA2, 0.223)
-    expect_equal(pval, 0.826)
+    testthat::expect_equal(A2, 0.214)
+    testthat::expect_equal(mA2, 0.223)
+    testthat::expect_equal(pval, 0.826)
 })
 
 

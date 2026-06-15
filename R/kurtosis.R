@@ -1,22 +1,27 @@
 #' Kurtosis test
 #'
-#' @param x Numeric vector. The input data.
-#' @param alpha Numeric (default: 0.05). Significance threshold (0 - 1).
-#' @param alternative Character (default: "two.sided).
-#'      The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").
-#' @param method Character (default: "G2"). Different skewness formula.
-#'      Available options are c("G2", "b2", "g2"). The "g2" is the original one.
-#'      The "G2" and "b2" are the unbiased estimate version of "g2".
+#' Performs a kurtosis test to assess whether a distribution deviates from
+#' normality in terms of tail heaviness.
 #'
-#' @returns A list:
-#' is_normal: Is the input data normally distributed?
-#' method: The name of the test.
-#' alpha: Significance threshold (default: 0.05).
-#' alternative: The alternative hypothesis (H1) to test.
-#' summary_table: Statistic summary, if any.
-#' statistic: The value used to calculate p-value.
-#' pvalue: p-value.
-#' confidence_interval: The lower and upper bound of CI.
+#' The test evaluates the null hypothesis that the population kurtosis is
+#' equal to 3, which is the kurtosis of a normal distribution.
+#' Values significantly different from 3 indicate deviations from normality,
+#' such as heavy-tailed or light-tailed behavior.
+#'
+#' @param x Numeric vector containing the input data.
+#' @param alpha Numeric (default: 0.05). Significance level for hypothesis
+#'   testing. Must be between 0 and 1.
+#' @param alternative Character (default: "two.sided").
+#'   Specifies the alternative hypothesis. Available options are
+#'   c("two.sided", "less", "greater").
+#' @param method Character (default: "G2"). Formula used to estimate
+#'   kurtosis. Available options are c("G2", "b2", "g2").
+#'   The "g2" statistic is the classical sample kurtosis estimator,
+#'   while "G2" and "b2" are bias-corrected versions of "g2".
+#' @param silent Logical (default: FALSE). If `FALSE`, results are printed
+#'   to the console.
+#'
+#' @returns A list
 #'
 #' @examples
 #' x <- c(10:17, 12, 12, 13, 13, 13, 13, 13, 14, 14, 14, 15, 15)
@@ -36,15 +41,17 @@ kurtosis <- function(
         x,
         alpha = 0.05,
         alternative = c("two.sided", "less", "greater"),
-        method = c("G2", "b2", "g2")
+        method = c("G2", "b2", "g2"),
+        silent = FALSE
 ){
-    stopifnot(alpha >= 0 & alpha <= 1)
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
     method <- match.arg(method[1], c("G2", "b2", "g2"))
 
     x <- x[stats::complete.cases(x)]
     n <- length(x)
     avg <- mean(x)
+
+    if (x[1] - x[n] == 0) stop("All values are identical.")
 
     m2 <- sum((x - avg) ^ 2) / n
     m4 <- sum((x - avg) ^ 4) / n
@@ -98,23 +105,12 @@ kurtosis <- function(
     CI_lower <- kurt - se * Zcrit
     CI_upper <- kurt + se * Zcrit
 
-    # tab <- data.frame(
-    #     check.names = FALSE,
-    #     row.names = sprintf("kurtosis (%s)", method),
-    #     "statistic" = kurt,
-    #     "Z" = Zk,
-    #     "Zcrit" = Zcrit,
-    #     "SE" = se,
-    #     "pval" = Zk_pval,
-    #     "CI_lower" = CI_lower,
-    #     "CI_upper" = CI_upper
-    # )
-
     tab <- normality_standard_summary_table(
         method = sprintf("kurtosis (%s)", method),
         alpha = alpha,
         statistic = kurt,
         pval = Zk_pval,
+        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
         standard_value = Zk,
         critical_value = Zcrit,
         SE = se,
@@ -122,14 +118,25 @@ kurtosis <- function(
         CI_upper = CI_upper
     )
 
-    normality_standard_output(
+    ret <- normality_standard_output(
         method = sprintf("Kurtosis (%s) test", method),
         is_normal = (Zk_pval > alpha),
         alpha = alpha,
         alternative = alt,
-        summary_table = tab,
+        summary = tab,
         statistic = stats::setNames(kurt, method),
-        pvalue = Zk_pval,
-        confidence_interval = c("lower" = CI_lower, "upper" = CI_upper)
+        pvalue = Zk_pval
     )
+
+    if (isFALSE(silent))
+    {
+        cat("\n--------------------------------------\n")
+        cat("Kurtosis test", "\n\n")
+        cat("Alternative:", alt, "\n\n")
+        cat(sprintf("Kurtosis (%s) = %s\n", method, round(kurt, 4)))
+        cat(sprintf("p-value = %s", round(pval, 5)))
+        cat("\n--------------------------------------\n")
+    }
+
+    invisible(ret)
 }

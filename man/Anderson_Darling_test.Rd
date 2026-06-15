@@ -7,7 +7,7 @@
 Anderson_Darling_test(x, alpha = 0.05, silent = FALSE)
 }
 \arguments{
-\item{x}{A numeric vector.}
+\item{x}{A numeric vector, at least length of 8.}
 
 \item{alpha}{Numeric (default: 0.05). Significance threshold, range from 0 to 1.}
 
@@ -17,11 +17,13 @@ Anderson_Darling_test(x, alpha = 0.05, silent = FALSE)
 A list.
 }
 \description{
-Performs the Anderson-Darling (A2) normality test which is based on the
-empirical distribution function (EDF).
+Performs the Anderson–Darling (A\if{html}{\out{<sup>}}2\if{html}{\out{</sup>}}) normality test, an EDF-based
+goodness-of-fit test that gives greater weight to deviations in the tails
+of the distribution.
 }
 \examples{
-Anderson_Darling_test(leghorn_chick)
+out <- Anderson_Darling_test(rnorm(10))
+print(out$summary)
 
 }
 \references{

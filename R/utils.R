@@ -37,31 +37,28 @@ interpolate <- function(idx_i, idx_1, idx_2, val_1, val_2)
 #' @param alpha Numeric (default: 0.05). Significance threshold.
 #' @param alternative Character. The alternative hypothesis (H1) to test.
 #'      Available options are c("two.sided", "less", "greater").
-#' @param summary_table Statistic summary, if any.
+#' @param summary Statistic summary, if any.
 #' @param statistic Numeric. The value used to calculate p-value.
 #' @param pvalue Numeric. The p-value of the test.
-#' @param confidence_interval Numeric vector of length 2. The lower and upper bound of CI.
 #'
-#' @returns A list contains 8 vectors.
+#' @returns A list.
 normality_standard_output <- function(
         method = "what test?",
         is_normal = NA,
         alpha = NA_real_,
         alternative = c("two.sided", "less", "greater"),
-        summary_table = NULL,
+        summary = NULL,
         statistic = NA_real_,
-        pvalue = NA_real_,
-        confidence_interval = c("lower" = NA_real_, "upper" = NA_real_)
+        pvalue = NA_real_
 ) {
     structure(
         .Data = list("method" = method,
                      "is_normal" = is_normal,
                      "alpha" = alpha,
                      "alternative" = alternative,
-                     "summary_table" = summary_table,
+                     "summary" = summary,
                      "statistic" = statistic,
-                     "pvalue" = pvalue,
-                     "confidence_interval" = confidence_interval),
+                     "pvalue" = pvalue),
         class = c("normality", "list")
     )
 }
@@ -72,6 +69,7 @@ normality_standard_summary_table <- function(
         alpha = 0.05,
         statistic = NA_real_,
         pval = NA_real_,
+        signif = NA_character_,
         standard_value = NA_real_,
         critical_value = NA_real_,
         SE = NA_real_,
@@ -90,6 +88,7 @@ normality_standard_summary_table <- function(
                "alpha" = alpha,
                "statistic" = statistic,
                "pval" = pval,
+               "signif" = signif,
                "standard_value" = standard_value,
                "critical_value" = critical_value,
                "SE" = SE,
@@ -105,11 +104,31 @@ normality_standard_summary_table <- function(
 }
 
 
+pval2asterisk <- function(x, alpha_lvl = c(0.05, 0.01, 0.001))
+{
+    a <- alpha_lvl
+
+    if (any(is.na(a)) || length(a) != 3 || !is.numeric(a))
+        stop("`alpha_lvl` should be a numeric vector with length of 3.")
+
+    vapply(
+        x,
+        function(`_`)
+        {
+            if (`_` <= a[3]) return("***")
+            if (`_` <= a[2] & `_` > a[3]) return("**")
+            if (`_` <= a[1] & `_` > a[2]) return("*")
+            if (`_` > a[1]) return("ns")
+        },
+        FUN.VALUE = character(1)
+    )
+}
+
+
 available_tests <- function()
 {
     c(
         "Anderson-Darling" = "ad",
-        "Cramer-von-Mises" = "cvm",
         "D'Agostino-Pearson" = "dap",
         "Shapiro-Wilk" = "sw",
         "Shapiro-Francia" = "sf",

@@ -8,37 +8,41 @@ skewness(
   x,
   alpha = 0.05,
   alternative = c("two.sided", "less", "greater"),
-  method = c("G1", "b1", "g1")
+  method = c("G1", "b1", "g1"),
+  silent = FALSE
 )
 }
 \arguments{
-\item{x}{Numeric vector. The input data.}
+\item{x}{Numeric vector containing the input data.}
 
-\item{alpha}{Numeric (default: 0.05). Significance threshold (0 - 1).}
+\item{alpha}{Numeric (default: 0.05). Significance level for hypothesis
+testing. Must be between 0 and 1.}
 
-\item{alternative}{Character (default: "two.sided).
-The alternative hypothesis (H1) to test. Available options are c("two.sided", "less", "greater").}
+\item{alternative}{Character (default: "two.sided").
+Specifies the alternative hypothesis. Available options are
+c("two.sided", "less", "greater").}
 
-\item{method}{Character (default: "G1"). Different skewness formula.
-Available options are c("G1", "b1", "g1"). The "g1" is the original one.
-The "G1" and "b1" are the unbiased estimate version of "g1".}
+\item{method}{Character (default: "G1"). Formula used to estimate
+skewness. Available options are c("G1", "b1", "g1").
+The "g1" statistic is the conventional moment-based sample skewness.
+The "G1" and "b1" statistics apply finite-sample corrections to reduce
+the bias of "g1".}
+
+\item{silent}{Logical (default: FALSE). If \code{FALSE}, the test results are
+printed to the console.}
 }
 \value{
-A list:
-is_normal: Is the input data normally distributed?
-method: The name of the test.
-alpha: Significance threshold (default: 0.05).
-alternative: The alternative hypothesis (H1) to test.
-summary_table: Statistic summary, if any.
-statistic: The value used to calculate p-value.
-pvalue: p-value.
-confidence_interval: The lower and upper bound of CI.
+A list
 }
 \description{
-Skewness test
+The test evaluates whether the population skewness is equal to zero.
+Under the null hypothesis, the data are assumed to originate from a
+symmetric distribution. Significant positive or negative skewness
+indicates asymmetry in the distribution and may suggest a departure
+from normality.
 }
 \examples{
-skewness(cholesterol)
+skewness(rnorm(30))
 }
 \references{
 Joanes, D.N., Gill, C.A., 1998.

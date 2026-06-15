@@ -1,33 +1,3 @@
-#' Cholesterol data
-#'
-#' A numeric vector, the cholesterol values from a sample of 62 subjects from the
-#'  Framingham Heart Study (FHS). This dataset was obtained from D'Agostino paper.
-#'
-#' @format A numeric vector length of 62.
-#'
-#' @references
-#' D’Agostino, R.B., Belanger, A., D’Agostino Jr., R.B., 1990.
-#' A Suggestion for Using Powerful and Informative Tests of Normality.
-#' Am. Stat. 44, 316–321.
-#' https://doi.org/10.1080/00031305.1990.10475751
-"cholesterol"
-
-
-#' Leghorn chicken data
-#'
-#' A numeric vector
-#'
-#' @format A numeric vector length of 20.
-#'
-#' @references
-#' Stephens, M.A., 2017. Tests Based on EDF Statistics.
-#' In: D’Agostino, R.B., Stephens, M.A. (Eds.),
-#' Goodness-of-Fit Techniques, 1st ed. Routledge, New York,
-#' pp. 98.
-#' https://doi.org/10.1201/9780203753064
-"leghorn_chick"
-
-
 #' Shapiro-Wilk normality test (coefficients)
 #'
 #' Coefficients (a<sub>i</sub>) for the W test for normality.

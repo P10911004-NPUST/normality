@@ -20,13 +20,15 @@ and other friends.
 
 # Installation
 
-You can install the package from [CRAN](https://cran.r-project.org/package=normality) with:
+<!-- You can install the package from [CRAN](https://cran.r-project.org/package=normality) with:
 
 ``` r
 install.packages("normality")
 ```
 
-or the developmental version from [GitHub](https://github.com/P10911004-NPUST/normality) with:
+or the developmental version from [GitHub](https://github.com/P10911004-NPUST/normality) with: -->
+
+### For the time being, please use the development version. The first CRAN release is not yet optimized for daily use. I expect to submit an updated version next month.
 
 ``` r
 if (!require("devtools")) install.packages("devtools")
@@ -36,7 +38,7 @@ devtools::install_github("P10911004-NPUST/normality")
 
 # Quick start
 ```r
-D.Agostino_Pearson_test(cholesterol)
+is_normal(rnorm(20), summary = TRUE)
 ```
 
 <br>

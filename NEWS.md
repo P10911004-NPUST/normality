@@ -1,3 +1,5 @@
+# normality 0.0.3
+
 # normality 0.0.2
 
 Submission failed: too high frequency updating CRAN package. So, I cancelled this and wait for the next patch release.

@@ -8,7 +8,9 @@ D.Agostino_Pearson_test(
   x,
   alpha = 0.05,
   alternative = c("two.sided", "less", "greater"),
-  silent = FALSE
+  silent = FALSE,
+  summary = TRUE,
+  misc = FALSE
 )
 }
 \arguments{
@@ -24,6 +26,10 @@ to the skewness and kurtosis components of the test.}
 
 \item{silent}{Logical (default: FALSE). If \code{FALSE}, results are printed
 to the console.}
+
+\item{summary}{Logical (default: TRUE). Produce a summary table.}
+
+\item{misc}{Logical (default: FALSE). Output other unimportant parameters.}
 }
 \value{
 A list

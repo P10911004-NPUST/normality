@@ -9,7 +9,8 @@ skewness(
   alpha = 0.05,
   alternative = c("two.sided", "less", "greater"),
   method = c("G1", "b1", "g1"),
-  silent = FALSE
+  silent = FALSE,
+  summary = TRUE
 )
 }
 \arguments{
@@ -30,6 +31,8 @@ the bias of "g1".}
 
 \item{silent}{Logical (default: FALSE). If \code{FALSE}, the test results are
 printed to the console.}
+
+\item{summary}{Logical (default: TRUE). Produce a summary table.}
 }
 \value{
 A list

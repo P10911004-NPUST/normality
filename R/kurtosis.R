@@ -20,6 +20,7 @@
 #'   while "G2" and "b2" are bias-corrected versions of "g2".
 #' @param silent Logical (default: FALSE). If `FALSE`, results are printed
 #'   to the console.
+#' @param summary Logical (default: TRUE). Produce a summary table.
 #'
 #' @returns A list
 #'
@@ -42,7 +43,8 @@ kurtosis <- function(
         alpha = 0.05,
         alternative = c("two.sided", "less", "greater"),
         method = c("G2", "b2", "g2"),
-        silent = FALSE
+        silent = FALSE,
+        summary = TRUE
 ){
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
     method <- match.arg(method[1], c("G2", "b2", "g2"))
@@ -102,31 +104,40 @@ kurtosis <- function(
     }
 
     kurt <- kurt + 3
-    CI_lower <- kurt - se * Zcrit
-    CI_upper <- kurt + se * Zcrit
-
-    tab <- normality_standard_summary_table(
-        method = sprintf("kurtosis (%s)", method),
-        alpha = alpha,
-        statistic = kurt,
-        pval = Zk_pval,
-        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
-        standard_value = Zk,
-        critical_value = Zcrit,
-        SE = se,
-        CI_lower = CI_lower,
-        CI_upper = CI_upper
-    )
 
     ret <- normality_standard_output(
         method = sprintf("Kurtosis (%s) test", method),
         is_normal = (Zk_pval > alpha),
         alpha = alpha,
         alternative = alt,
-        summary = tab,
         statistic = stats::setNames(kurt, method),
         pvalue = Zk_pval
     )
+
+    if (isTRUE(summary))
+    {
+        CI_lower <- kurt - se * Zcrit
+        CI_upper <- kurt + se * Zcrit
+
+        ret[["summary"]] <- normality_standard_summary_table(
+            method = sprintf("kurtosis (%s)", method),
+            alpha = alpha,
+            statistic = kurt,
+            pval = Zk_pval,
+            signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
+            standard_value = Zk,
+            critical_value = Zcrit,
+            SE = se,
+            CI_lower = CI_lower,
+            CI_upper = CI_upper,
+            N = n,
+            AVG = avg,
+            MED = stats::median(x),
+            MIN = min(x),
+            MAX = max(x),
+            SD = stats::sd(x)
+        )
+    }
 
     if (isFALSE(silent))
     {

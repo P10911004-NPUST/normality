@@ -40,6 +40,7 @@ interpolate <- function(idx_i, idx_1, idx_2, val_1, val_2)
 #' @param summary Statistic summary, if any.
 #' @param statistic Numeric. The value used to calculate p-value.
 #' @param pvalue Numeric. The p-value of the test.
+#' @param misc List. Miscellaneous elements.
 #'
 #' @returns A list.
 normality_standard_output <- function(
@@ -49,7 +50,8 @@ normality_standard_output <- function(
         alternative = c("two.sided", "less", "greater"),
         summary = NULL,
         statistic = NA_real_,
-        pvalue = NA_real_
+        pvalue = NA_real_,
+        misc = NULL
 ) {
     structure(
         .Data = list("method" = method,
@@ -58,7 +60,8 @@ normality_standard_output <- function(
                      "alternative" = alternative,
                      "summary" = summary,
                      "statistic" = statistic,
-                     "pvalue" = pvalue),
+                     "pvalue" = pvalue,
+                     "misc" = misc),
         class = c("normality", "list")
     )
 }

@@ -4,7 +4,13 @@
 \alias{Anderson_Darling_test}
 \title{Anderson-Darling Normality Test}
 \usage{
-Anderson_Darling_test(x, alpha = 0.05, silent = FALSE)
+Anderson_Darling_test(
+  x,
+  alpha = 0.05,
+  silent = FALSE,
+  summary = TRUE,
+  misc = FALSE
+)
 }
 \arguments{
 \item{x}{A numeric vector, at least length of 8.}
@@ -12,6 +18,10 @@ Anderson_Darling_test(x, alpha = 0.05, silent = FALSE)
 \item{alpha}{Numeric (default: 0.05). Significance threshold, range from 0 to 1.}
 
 \item{silent}{Logical (default: FALSE). If \code{FALSE}, print out the results.}
+
+\item{summary}{Logical (default: TRUE). Produce a summary table.}
+
+\item{misc}{Logical (default: FALSE). Output other unimportant parameters.}
 }
 \value{
 A list.

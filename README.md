@@ -51,7 +51,7 @@ is_normal(rnorm(20), summary = TRUE)
   - [ ] `Cramer_von_Mises_test()`
   - [ ] `Lilliefors_test()`
   - [x] `D.Agostino_Pearson_test()`
-  - [ ] `Jarque_Bera_test()`
+  - [x] `Jarque_Bera_test()`
   - [x] `Shapiro_Wilk_test()` with 3 alternatives:
     - [Shapiro-Wilk](https://doi.org/10.2307/2333709)
     - [Shapiro-Francia](https://doi.org/10.1080/01621459.1972.10481232)

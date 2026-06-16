@@ -9,7 +9,8 @@ kurtosis(
   alpha = 0.05,
   alternative = c("two.sided", "less", "greater"),
   method = c("G2", "b2", "g2"),
-  silent = FALSE
+  silent = FALSE,
+  summary = TRUE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ while "G2" and "b2" are bias-corrected versions of "g2".}
 
 \item{silent}{Logical (default: FALSE). If \code{FALSE}, results are printed
 to the console.}
+
+\item{summary}{Logical (default: TRUE). Produce a summary table.}
 }
 \value{
 A list

@@ -7,6 +7,8 @@
 #' @param x A numeric vector, at least length of 8.
 #' @param alpha Numeric (default: 0.05). Significance threshold, range from 0 to 1.
 #' @param silent Logical (default: FALSE). If `FALSE`, print out the results.
+#' @param summary Logical (default: TRUE). Produce a summary table.
+#' @param misc Logical (default: FALSE). Output other unimportant parameters.
 #'
 #' @returns A list.
 #'
@@ -35,7 +37,9 @@
 Anderson_Darling_test <- function(
         x,
         alpha = 0.05,
-        silent = FALSE
+        silent = FALSE,
+        summary = TRUE,
+        misc = FALSE
 ) {
     x <- sort(x[stats::complete.cases(x)], decreasing = FALSE)
     n <- length(x)
@@ -76,30 +80,35 @@ Anderson_Darling_test <- function(
 
     A2crit <- .calc_A2_crit(alpha, n)
 
-    tab <- normality_standard_summary_table(
-        method = "Anderson-Darling (A2)",
-        statistic = A2,
-        standard_value = mA2,
-        critical_value = A2crit,
-        pval = pval,
-        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
-        N = n,
-        AVG = avg,
-        MED = stats::median(x),
-        MIN = min(x),
-        MAX = max(x),
-        SD = stats::sd(x)
-    )
-
     ret <- normality_standard_output(
         method = "Anderson-Darling normality test",
         is_normal = (pval > alpha),
         alpha = alpha,
         alternative = "greater",
-        summary = tab,
         statistic = c("A2" = A2),
         pvalue = pval
     )
+
+    if (isTRUE(summary))
+    {
+        ret[["summary"]] <- normality_standard_summary_table(
+            method = "Anderson-Darling (A2)",
+            statistic = A2,
+            standard_value = mA2,
+            critical_value = A2crit,
+            pval = pval,
+            signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
+            N = n,
+            AVG = avg,
+            MED = stats::median(x),
+            MIN = min(x),
+            MAX = max(x),
+            SD = stats::sd(x)
+        )
+    }
+
+    if (isTRUE(misc))
+        ret[["misc"]] <- c("u(j)" = Pi_lower, "rev(u(j))" = Pi_upper, "modified-A2" = mA2)
 
     if (isFALSE(silent))
     {

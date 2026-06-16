@@ -25,13 +25,12 @@
 #' out <- Jarque_Bera_test(rnorm(50))
 #' print(out$summary)
 #'
-#' @seealso [D.Agostino_Pearson_test()]
-#'
 #' @references
 #' Jarque, C.M., Bera, A.K., 1987.
 #' A Test for Normality of Observations and Regression Residuals.
 #' Int. Stat. Rev. 55, 163–172.
 #' https://doi.org/10.2307/1403192
+#' @seealso [D.Agostino_Pearson_test()]
 #' @export
 Jarque_Bera_test <- function(
         x,

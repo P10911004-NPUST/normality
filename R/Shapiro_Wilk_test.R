@@ -8,10 +8,12 @@
 #' @param alpha Significance threshold (default: 0.05).
 #' @param method Character (default: "SWR"). Use which modification of the test?
 #'        Available options are c("SWR", "SF", "SW").
-#' @param silent Logical (default: FALSE). If `FALSE`, print out the results.
 #' @param resampling Logical (default: TRUE).
 #'        If `TRUE`, unlock the sample size limitation of the test by using
 #'        sample resampling method.
+#' @param silent Logical (default: FALSE). If `FALSE`, print out the results.
+#' @param summary Logical (default: TRUE). Produce a summary table.
+#' @param misc Logical (default: FALSE). Output other unimportant parameters.
 #'
 #' @details
 #' method
@@ -61,12 +63,15 @@ Shapiro_Wilk_test <- function(
         x,
         alpha = 0.05,
         method = c("SWR", "SF", "SW"),
+        resampling = TRUE,
         silent = FALSE,
-        resampling = TRUE
+        summary = TRUE,
+        misc = FALSE
 ) {
     method <- toupper(method)
     method <- match.arg(method, c("SWR", "SF", "SW"))
     m <- match(method, c("SWR", "SF", "SW"))
+
     x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
 
@@ -92,19 +97,33 @@ Shapiro_Wilk_test <- function(
             isub <- rep(1:nsub, length.out = n)
 
             tab_lst <- vector("list", nsub)
+            misc_lst <- vector("list", nsub)
+            Z_vct <- vector("numeric", nsub)
             for (i in 1:nsub)
             {
                 if (isFALSE(silent))
                     cat(sprintf("Resampling: %s/%s\n", i, nsub))
+
                 xi <- x[isub == i]
-                out <- func(xi, alpha)
-                tab <- out[["summary"]]
-                rownames(tab) <- sprintf("resample_%s", i)
-                tab_lst[[i]] <- tab
+
+                out <- func(xi, alpha, silent = TRUE, summary)
+                Z_vct[[i]] <- out[["misc"]][["Z"]]
+
+                if (isTRUE(summary))
+                {
+                    tab <- out[["summary"]]
+                    rownames(tab) <- sprintf("resample_%s", i)
+                    tab_lst[[i]] <- tab
+                }
+
+                if (isTRUE(misc))
+                    misc_lst[[i]] <- out[["misc"]]
             }
-            tab <- do.call(rbind.data.frame, tab_lst)
+
+            names(misc_lst) <- paste("resample", 1:nsub, sep = "_")
+
             W <- mean(out[["statistic"]])
-            Z <- mean(tab[["standard_value"]])
+            Z <- mean(Z_vct)
             pval <- stats::pnorm(Z, lower.tail = FALSE)
 
             ret <- normality_standard_output(
@@ -112,10 +131,16 @@ Shapiro_Wilk_test <- function(
                 is_normal = (pval > alpha),
                 alpha = alpha,
                 alternative = "greater",
-                summary = tab,
                 statistic = stats::setNames(W, test_symbol),
                 pvalue = pval
             )
+
+            if (isTRUE(summary))
+                ret[["summary"]] <- do.call(rbind.data.frame, tab_lst)
+
+            if (isTRUE(misc))
+                ret[["misc"]] <- misc_lst
+
         } else
             stop(sprintf("Sample size should be n <= %s", max_n))
     }
@@ -144,7 +169,7 @@ Shapiro_Wilk_test <- function(
 #                              Internal function                               #
 #==============================================================================#
 
-.Shapiro_Wilk_original <- function(x, alpha = 0.05, silent = FALSE)
+.Shapiro_Wilk_original <- function(x, alpha = 0.05, silent = FALSE, summary = TRUE)
 {
     x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
@@ -172,6 +197,7 @@ Shapiro_Wilk_test <- function(
 
     p_ref <- c(0, 0.01, 0.02, 0.05, 0.1, 0.5, 0.9, 0.95, 0.98, 0.99, 1)
     W_crit <- Shapiro_Wilk_pval_table[n, , drop = TRUE] # this is a list
+
     imin <- sum(W >= unlist(W_crit))
 
     pval <- interpolate(idx_i = W,
@@ -180,36 +206,40 @@ Shapiro_Wilk_test <- function(
                         val_1 = p_ref[imin],
                         val_2 = p_ref[imin + 1])
 
-    tab <- normality_standard_summary_table(
-        method = "Shapiro-Wilk (W)",
-        statistic = W,
-        standard_value = W,
-        critical_value = unname(W_crit[[match(alpha, p_ref)]]),
-        pval = pval,
-        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
-        N = n,
-        AVG = avg,
-        MED = stats::median(x),
-        MIN = min(x),
-        MAX = max(x),
-        SD = stats::sd(x)
-    )
-
     ret <- normality_standard_output(
         method = "Shapiro-Wilk (W) normality test",
         is_normal = (pval > alpha),
         alpha = alpha,
         alternative = "greater",
-        summary = tab,
         statistic = c("W" = W),
-        pvalue = pval
+        pvalue = pval,
+        misc = list("b" = b, "Wcrit" = W_crit)
     )
+
+    if (isTRUE(summary))
+    {
+        ret[["summary"]] <- normality_standard_summary_table(
+            method = "Shapiro-Wilk (W)",
+            statistic = W,
+            standard_value = W,
+            critical_value = unname(W_crit[[match(alpha, p_ref)]]),
+            pval = pval,
+            signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
+            N = n,
+            AVG = avg,
+            MED = stats::median(x),
+            MIN = min(x),
+            MAX = max(x),
+            SD = stats::sd(x)
+        )
+    }
 
     invisible(ret)
 }
 
 
-.Shapiro_Francia <- function(x, alpha = 0.05, silent = FALSE) {
+.Shapiro_Francia <- function(x, alpha = 0.05, silent = FALSE, summary = TRUE)
+{
     x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg = mean(x)
@@ -229,38 +259,43 @@ Shapiro_Wilk_test <- function(
     pval <- stats::pnorm(Z, lower.tail = FALSE)
     Zcrit <- stats::qnorm(alpha, lower.tail = FALSE)
 
-    tab <- normality_standard_summary_table(
-        method = "Shapiro-Francia (W')",
-        alpha = alpha,
-        statistic = W,
-        pval = pval,
-        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
-        standard_value = Z,
-        critical_value = Zcrit,
-        N = n,
-        AVG = avg,
-        MED = stats::median(x),
-        MIN = min(x),
-        MAX = max(x),
-        SD = stats::sd(x)
-    )
-
     ret <- normality_standard_output(
         method = "Shapiro-Francia (W') normality test",
         is_normal = (pval > 0.05),
         alpha = alpha,
         alternative = "greater",
-        summary = tab,
         statistic = c("W'" = W),
-        pvalue = pval
+        pvalue = pval,
+        misc = c("m" = m, "mu_hat" = mu_hat, "sigma_hat" = sigma_hat,
+                 "Z" = Z, "Zcrit" = Zcrit)
     )
+
+    if (isTRUE(summary))
+    {
+        ret[["summary"]] <- normality_standard_summary_table(
+            method = "Shapiro-Francia (W')",
+            alpha = alpha,
+            statistic = W,
+            pval = pval,
+            signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
+            standard_value = Z,
+            critical_value = Zcrit,
+            N = n,
+            AVG = avg,
+            MED = stats::median(x),
+            MIN = min(x),
+            MAX = max(x),
+            SD = stats::sd(x)
+        )
+    }
 
     invisible(ret)
 }
 
 
 
-.Shapiro_Wilk_Royston <- function(x, alpha = 0.05, silent = FALSE) {
+.Shapiro_Wilk_Royston <- function(x, alpha = 0.05, silent = FALSE, summary = TRUE)
+{
     x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg <- mean(x)
@@ -324,6 +359,7 @@ Shapiro_Wilk_test <- function(
 
     if (n >= 12 & n <= 5000)
     {
+        gamma <- NA_real_
         e <- log(n)
         w <- log(1 - W)
         mu <- -1.5861 - (0.31082 * e) - (0.083751 * e * e) + (0.0038915 * e * e * e)
@@ -335,32 +371,40 @@ Shapiro_Wilk_test <- function(
     Z <- (w - mu) / sigma
     pval <- stats::pnorm(Z, lower.tail = FALSE)
 
-    tab <- normality_standard_summary_table(
-        method = "Shapiro-Wilk-Royston (w)",
-        alpha = alpha,
-        statistic = w,
-        pval = pval,
-        signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
-        standard_value = Z,
-        critical_value = Zcrit,
-        N = n,
-        AVG = avg,
-        MED = stats::median(x),
-        MIN = min(x),
-        MAX = max(x),
-        SD = stats::sd(x)
-    )
-
     ret <- normality_standard_output(
         method = "Shapiro-Wilk-Royston (w) normality test",
         is_normal = (pval > 0.05),
         alpha = alpha,
         alternative = "greater",
-        summary = tab,
         statistic = c("W" = W, "normalized-W (w)" = w),
-        pvalue = pval
+        pvalue = pval,
+        misc = list("mTm" = m2, "ci" = ci,
+                    "m(n)^2" = mn, "m(n-1)^2" = mn1, "m(i)" = mi,
+                    "phi" = phi,
+                    "a(n)" = an, "a(n-1)" = an1, "ai" = ai,
+                    "gamma" = gamma, "mu" = mu, "sigma" = sigma,
+                    "Z" = Z, "Zcrit" = Zcrit)
     )
 
-    invisible(ret)
+    if (isTRUE(summary))
+    {
+        ret[["summary"]] <- normality_standard_summary_table(
+            method = "Shapiro-Wilk-Royston (w)",
+            alpha = alpha,
+            statistic = w,
+            pval = pval,
+            signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
+            standard_value = Z,
+            critical_value = Zcrit,
+            N = n,
+            AVG = avg,
+            MED = stats::median(x),
+            MIN = min(x),
+            MAX = max(x),
+            SD = stats::sd(x)
+        )
+    }
+
+    return(ret)
 }
 

@@ -11,7 +11,8 @@ normality_standard_output(
   alternative = c("two.sided", "less", "greater"),
   summary = NULL,
   statistic = NA_real_,
-  pvalue = NA_real_
+  pvalue = NA_real_,
+  misc = NULL
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ Available options are c("two.sided", "less", "greater").}
 \item{statistic}{Numeric. The value used to calculate p-value.}
 
 \item{pvalue}{Numeric. The p-value of the test.}
+
+\item{misc}{List. Miscellaneous elements.}
 }
 \value{
 A list.

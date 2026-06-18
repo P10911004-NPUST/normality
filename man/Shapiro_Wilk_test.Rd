@@ -8,10 +8,10 @@ Shapiro_Wilk_test(
   x,
   alpha = 0.05,
   method = c("SWR", "SF", "SW"),
-  resampling = TRUE,
   silent = FALSE,
   summary = TRUE,
-  misc = FALSE
+  misc = FALSE,
+  resampling = TRUE
 )
 }
 \arguments{
@@ -22,15 +22,15 @@ Shapiro_Wilk_test(
 \item{method}{Character (default: "SWR"). Use which modification of the test?
 Available options are c("SWR", "SF", "SW").}
 
-\item{resampling}{Logical (default: TRUE).
-If \code{TRUE}, unlock the sample size limitation of the test by using
-sample resampling method.}
-
 \item{silent}{Logical (default: FALSE). If \code{FALSE}, print out the results.}
 
 \item{summary}{Logical (default: TRUE). Produce a summary table.}
 
 \item{misc}{Logical (default: FALSE). Output other unimportant parameters.}
+
+\item{resampling}{Logical (default: TRUE).
+If \code{TRUE}, unlock the sample size limitation of the test by using
+sample resampling method.}
 }
 \value{
 A list.

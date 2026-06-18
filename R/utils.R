@@ -128,13 +128,4 @@ pval2asterisk <- function(x, alpha_lvl = c(0.05, 0.01, 0.001))
 }
 
 
-available_tests <- function()
-{
-    c(
-        "Anderson-Darling" = "ad",
-        "D'Agostino-Pearson" = "dap",
-        "Shapiro-Wilk" = "sw",
-        "Shapiro-Francia" = "sf",
-        "Shapiro-Wilk-Royston" = "swr"
-    )
-}
+

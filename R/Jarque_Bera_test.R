@@ -44,6 +44,8 @@ Jarque_Bera_test <- function(
     x <- x[stats::complete.cases(x)]
     n <- length(x)
 
+    if (x[1] - x[n] == 0) stop("All values are identical.")
+
     skew_out <- skewness(x, alpha, alt, "b1", silent = TRUE, summary)
     kurt_out <- kurtosis(x, alpha, alt, "b2", silent = TRUE, summary)
 

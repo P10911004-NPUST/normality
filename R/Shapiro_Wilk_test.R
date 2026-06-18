@@ -8,12 +8,12 @@
 #' @param alpha Significance threshold (default: 0.05).
 #' @param method Character (default: "SWR"). Use which modification of the test?
 #'        Available options are c("SWR", "SF", "SW").
-#' @param resampling Logical (default: TRUE).
-#'        If `TRUE`, unlock the sample size limitation of the test by using
-#'        sample resampling method.
 #' @param silent Logical (default: FALSE). If `FALSE`, print out the results.
 #' @param summary Logical (default: TRUE). Produce a summary table.
 #' @param misc Logical (default: FALSE). Output other unimportant parameters.
+#' @param resampling Logical (default: TRUE).
+#'        If `TRUE`, unlock the sample size limitation of the test by using
+#'        sample resampling method.
 #'
 #' @details
 #' method
@@ -63,10 +63,10 @@ Shapiro_Wilk_test <- function(
         x,
         alpha = 0.05,
         method = c("SWR", "SF", "SW"),
-        resampling = TRUE,
         silent = FALSE,
         summary = TRUE,
-        misc = FALSE
+        misc = FALSE,
+        resampling = TRUE
 ) {
     method <- toupper(method)
     method <- match.arg(method, c("SWR", "SF", "SW"))
@@ -74,6 +74,8 @@ Shapiro_Wilk_test <- function(
 
     x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
+
+    if (x[1] - x[n] == 0) stop("All values are identical.")
 
     test_name <- switch(m,
                         "Shapiro-Wilk-Royston (w) normality test  ",
@@ -88,6 +90,13 @@ Shapiro_Wilk_test <- function(
                    .Shapiro_Wilk_original)
 
     max_n <- switch(m, 5000, 5000, 50)
+
+    if (n <= max_n)
+    {
+        ret <- func(x, alpha, silent, summary)
+        if (isFALSE(misc))
+            ret["misc"] <- list(NULL)
+    }
 
     if (n > max_n)
     {
@@ -107,6 +116,7 @@ Shapiro_Wilk_test <- function(
                 xi <- x[isub == i]
 
                 out <- func(xi, alpha, silent = TRUE, summary)
+
                 Z_vct[[i]] <- out[["misc"]][["Z"]]
 
                 if (isTRUE(summary))
@@ -122,7 +132,7 @@ Shapiro_Wilk_test <- function(
 
             names(misc_lst) <- paste("resample", 1:nsub, sep = "_")
 
-            W <- mean(out[["statistic"]])
+            W <- mean(out[["statistic"]][[1]])
             Z <- mean(Z_vct)
             pval <- stats::pnorm(Z, lower.tail = FALSE)
 
@@ -145,9 +155,6 @@ Shapiro_Wilk_test <- function(
             stop(sprintf("Sample size should be n <= %s", max_n))
     }
 
-    if (n <= max_n)
-        ret <- func(x, alpha, silent)
-
     if (isFALSE(silent))
     {
         statistic <- round(unname(ret[["statistic"]]), 4)
@@ -169,14 +176,17 @@ Shapiro_Wilk_test <- function(
 #                              Internal function                               #
 #==============================================================================#
 
-.Shapiro_Wilk_original <- function(x, alpha = 0.05, silent = FALSE, summary = TRUE)
-{
+.Shapiro_Wilk_original <- function(
+        x,
+        alpha = 0.05,
+        silent = FALSE,
+        summary = TRUE
+) {
     x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg <- mean(x)
     SS <- sum((x - avg) ^ 2)
 
-    if (x[1] - x[n] == 0) stop("All values are identical.")
     if (n < 3 || n > 50) stop("Sample size should be 3 <= n <= 50.")
     if (is_tied(x)) warning("Too many tied-values.")
 
@@ -194,6 +204,7 @@ Shapiro_Wilk_test <- function(
                 FUN.VALUE = numeric(1))
     b <- sum(b)
     W <- (b ^ 2) / SS
+    Z <- W
 
     p_ref <- c(0, 0.01, 0.02, 0.05, 0.1, 0.5, 0.9, 0.95, 0.98, 0.99, 1)
     W_crit <- Shapiro_Wilk_pval_table[n, , drop = TRUE] # this is a list
@@ -213,7 +224,7 @@ Shapiro_Wilk_test <- function(
         alternative = "greater",
         statistic = c("W" = W),
         pvalue = pval,
-        misc = list("b" = b, "Wcrit" = W_crit)
+        misc = list("Z" = Z, "b" = b, "Wcrit" = W_crit)
     )
 
     if (isTRUE(summary))
@@ -238,13 +249,16 @@ Shapiro_Wilk_test <- function(
 }
 
 
-.Shapiro_Francia <- function(x, alpha = 0.05, silent = FALSE, summary = TRUE)
-{
+.Shapiro_Francia <- function(
+        x,
+        alpha = 0.05,
+        silent = FALSE,
+        summary = TRUE
+) {
     x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg = mean(x)
 
-    if (x[1] - x[n] == 0) stop("All values are identical.")
     if (n < 5 || n > 5000) stop("Sample size should be 5 <= n <= 5000.")
     if (is_tied(x)) warning("Too many tied-values.")
 
@@ -294,8 +308,12 @@ Shapiro_Wilk_test <- function(
 
 
 
-.Shapiro_Wilk_Royston <- function(x, alpha = 0.05, silent = FALSE, summary = TRUE)
-{
+.Shapiro_Wilk_Royston <- function(
+        x,
+        alpha = 0.05,
+        silent = FALSE,
+        summary = TRUE
+) {
     x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg <- mean(x)
@@ -303,7 +321,6 @@ Shapiro_Wilk_test <- function(
     Zcrit <- stats::qnorm(alpha, lower.tail = FALSE)
 
     #----------------------- Error Message -----------------------#
-    if (x[1] - x[n] == 0) stop("All values are identical.")
     if (is.na(n) || n < 3) stop("Sample size should be at least 3.")
     if (is_tied(x)) warning("Too many tied-values.")
 

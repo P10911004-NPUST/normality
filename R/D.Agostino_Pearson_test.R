@@ -45,6 +45,8 @@ D.Agostino_Pearson_test <- function(
     n <- length(x)
     avg <- mean(x)
 
+    if (x[1] - x[n] == 0) stop("All values are identical.")
+
     #-------------------------------- skewness --------------------------------#
     skew_out <- D.Agostino_skewness(x, alpha, alt, summary)
     Zs <- skew_out[["misc"]][["Z(b1)"]]
@@ -132,7 +134,7 @@ D.Agostino_skewness <- function(
     se <- sqrt((6 * n * (n - 1)) / ((n - 2) * (n + 1) * (n + 3))) # SE(G1)
 
     if (n < 9)
-        warning("D'Agostino-Pearson skewness test may be inappropriate for n < 9")
+        warning("D'Agostino-Pearson skewness test is inappropriate for n < 9")
 
     #----------------------------- Sample moments -----------------------------#
     m2 <- sum((x - avg) ^ 2) / n # formula 6
@@ -230,10 +232,8 @@ D.Agostino_kurtosis <- function(
     n <- length(x)
     avg <- mean(x)
 
-    if (x[1] - x[n] == 0)
-        stop("All values are identical.")
     if (n < 20)
-        warning("D'Agostino-Pearson test is inappropriate for n < 20")
+        warning("D'Agostino-Pearson kurtosis test is inappropriate for n < 20")
 
     #----------------------------- Sample moments -----------------------------#
     m2 <- sum((x - avg) ^ 2) / n

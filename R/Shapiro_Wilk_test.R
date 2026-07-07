@@ -82,8 +82,6 @@ Shapiro_Wilk_test <- function(
                         "Shapiro-Francia (W') normality test  ",
                         "Shapiro-Wilk (W) normality test  ")
 
-    test_symbol <- switch(m, "w", "W'", "W")
-
     func <- switch(m,
                    .Shapiro_Wilk_Royston,
                    .Shapiro_Francia,
@@ -140,8 +138,7 @@ Shapiro_Wilk_test <- function(
                 method = test_name,
                 is_normal = (pval > alpha),
                 alpha = alpha,
-                alternative = "greater",
-                statistic = stats::setNames(W, test_symbol),
+                statistic = c("W" = W),
                 pvalue = pval
             )
 
@@ -155,6 +152,7 @@ Shapiro_Wilk_test <- function(
             stop(sprintf("Sample size should be n <= %s", max_n))
     }
 
+
     if (isFALSE(silent))
     {
         statistic <- round(unname(ret[["statistic"]]), 4)
@@ -162,7 +160,7 @@ Shapiro_Wilk_test <- function(
         cat(
             sprintf("\n%s\n", paste(rep("-", nchar(test_name)), collapse = "")),
             sprintf("%s\n\n", test_name),
-            sprintf("Statistic (%s) = %s\n", test_symbol, statistic),
+            sprintf("Statistic (W) = %s\n", statistic),
             sprintf("p-value = %s", pval),
             sprintf("\n%s\n", paste(rep("-", nchar(test_name)), collapse = ""))
         )
@@ -221,7 +219,6 @@ Shapiro_Wilk_test <- function(
         method = "Shapiro-Wilk (W) normality test",
         is_normal = (pval > alpha),
         alpha = alpha,
-        alternative = "greater",
         statistic = c("W" = W),
         pvalue = pval,
         misc = list("Z" = Z, "b" = b, "Wcrit" = W_crit)
@@ -277,7 +274,6 @@ Shapiro_Wilk_test <- function(
         method = "Shapiro-Francia (W') normality test",
         is_normal = (pval > 0.05),
         alpha = alpha,
-        alternative = "greater",
         statistic = c("W'" = W),
         pvalue = pval,
         misc = c("m" = m, "mu_hat" = mu_hat, "sigma_hat" = sigma_hat,
@@ -392,10 +388,9 @@ Shapiro_Wilk_test <- function(
         method = "Shapiro-Wilk-Royston (w) normality test",
         is_normal = (pval > 0.05),
         alpha = alpha,
-        alternative = "greater",
-        statistic = c("W" = W, "normalized-W (w)" = w),
+        statistic = c("W" = W),
         pvalue = pval,
-        misc = list("mTm" = m2, "ci" = ci,
+        misc = list("normalized-W (w)" = w, "mTm" = m2, "ci" = ci,
                     "m(n)^2" = mn, "m(n-1)^2" = mn1, "m(i)" = mi,
                     "phi" = phi,
                     "a(n)" = an, "a(n-1)" = an1, "ai" = ai,

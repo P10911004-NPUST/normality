@@ -26,7 +26,7 @@ results to the console.}
 table of the test results.}
 
 \item{method}{Character. Abbreviation specifying the normality test to perform.
-Available options are \code{c("AD", "DAP", "JB", "SW", "SF", "SWR")}.}
+Available options are \code{c("AD", "DAP", "JB", "LF", "SW", "SF", "SWR")}.}
 
 \item{...}{Additional arguments passed to the selected test function.}
 }
@@ -68,6 +68,11 @@ The test evaluates whether the observed skewness and kurtosis
 differ significantly from the values expected under a normal
 distribution. The method is commonly used in econometrics and is
 generally more appropriate for moderate to large sample sizes.
+\item \code{"LF"}: Lilliefors test.
+The Lilliefors test is an EDF omnibus test modified from Kolmogorov-Smirnov
+test for the composite hypothesis of normality. The test statistic is the
+maximal absolute difference between empirical and hypothetical cumulative
+distribution function.
 \item \code{"SW"}: Shapiro–Wilk test.
 The original normality test proposed by Shapiro and Wilk (1965),
 based on the correlation between ordered observations and their
@@ -94,7 +99,7 @@ a normal distribution. Small p-values indicate evidence against the
 assumption of normality.
 }
 \examples{
-check_normality(rnorm(20), method = "AD")
-check_normality(rnorm(20), method = "DAP")
-check_normality(rnorm(20), method = "SW")
+out_AD <- check_normality(rnorm(20), method = "AD")
+out_DAP <- check_normality(rnorm(20), method = "DAP")
+out_SW <- check_normality(rnorm(20), method = "SW")
 }

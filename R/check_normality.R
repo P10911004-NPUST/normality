@@ -10,7 +10,7 @@
 #' @param summary Logical (default: `TRUE`). If `TRUE`, return a summary
 #'        table of the test results.
 #' @param method Character. Abbreviation specifying the normality test to perform.
-#'        Available options are `c("AD", "DAP", "JB", "SW", "SF", "SWR")`.
+#'        Available options are `c("AD", "DAP", "JB", "LF", "SW", "SF", "SWR")`.
 #' @param ... Additional arguments passed to the selected test function.
 #'
 #' @details
@@ -48,6 +48,12 @@
 #'   distribution. The method is commonly used in econometrics and is
 #'   generally more appropriate for moderate to large sample sizes.
 #'
+#' - `"LF"`: Lilliefors test.
+#'   The Lilliefors test is an EDF omnibus test modified from Kolmogorov-Smirnov
+#'   test for the composite hypothesis of normality. The test statistic is the
+#'   maximal absolute difference between empirical and hypothetical cumulative
+#'   distribution function.
+#'
 #' - `"SW"`: Shapiro–Wilk test.
 #'   The original normality test proposed by Shapiro and Wilk (1965),
 #'   based on the correlation between ordered observations and their
@@ -77,9 +83,9 @@
 #' @returns A list.
 #'
 #' @examples
-#' check_normality(rnorm(20), method = "AD")
-#' check_normality(rnorm(20), method = "DAP")
-#' check_normality(rnorm(20), method = "SW")
+#' out_AD <- check_normality(rnorm(20), method = "AD")
+#' out_DAP <- check_normality(rnorm(20), method = "DAP")
+#' out_SW <- check_normality(rnorm(20), method = "SW")
 #' @export
 check_normality <- function(
         x,
@@ -89,7 +95,7 @@ check_normality <- function(
         method = "SWR",
         ...
 ) {
-    tests <- c("AD", "DAP", "JB", "SW", "SF", "SWR")
+    tests <- c("AD", "DAP", "JB", "LF", "SW", "SF", "SWR")
     method <- toupper(method)
     method <- match.arg(method, tests)
     m <- match(method, tests)
@@ -99,6 +105,7 @@ check_normality <- function(
                    Anderson_Darling_test,
                    D.Agostino_Pearson_test,
                    Jarque_Bera_test,
+                   Lilliefors_test,
                    Shapiro_Wilk_test,
                    Shapiro_Wilk_test,
                    Shapiro_Wilk_test)

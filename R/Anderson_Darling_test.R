@@ -108,7 +108,7 @@ Anderson_Darling_test <- function(
     }
 
     if (isTRUE(misc))
-        ret[["misc"]] <- c("u(j)" = Pi_lower, "rev(u(j))" = Pi_upper, "modified-A2" = mA2)
+        ret[["misc"]] <- list("u(j)" = Pi_lower, "rev(u(j))" = Pi_upper, "modified-A2" = mA2)
 
     if (isFALSE(silent))
     {

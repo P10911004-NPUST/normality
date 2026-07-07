@@ -1,3 +1,55 @@
+tidy_to_dataframe <- function(data, formula = NULL)
+{
+    ret <- NULL
+
+    if (is.recursive(data) & is.null(dim(data)))
+    {
+        data <- lapply(data, function(x) x[stats::complete.cases(x)])
+        data <- data
+        isub <- seq_along(data)
+        grp <- names(data)
+        if (is.null(grp)) grp <- isub
+        lst <- lapply(
+            isub,
+            function(i)
+            {
+                vct <- data[[i]]
+                vct <- vct[stats::complete.cases(vct)]
+                if (is.null(vct) || length(vct) == 0)
+                    df0 <- data.frame(y = NA_real_, x = grp[i])
+                else
+                    df0 <- data.frame(y = vct, x = grp[i])
+            }
+        )
+        ret <- do.call(rbind.data.frame, lst)
+        ret <- ret[stats::complete.cases(ret[["y"]]), ]
+        ret[["x"]] <- as.character(ret[["x"]])
+        attr(ret, "x_name") <- "IV"
+        attr(ret, "y_name") <- "DV"
+    }
+
+    if (is.matrix(data))
+        data <- as.data.frame(data)
+
+    if (is.data.frame(data))
+    {
+        if (is.null(formula)) stop("Please specify the `formula`.")
+        df0 <- stats::model.frame(formula, data, drop.unused.levels = TRUE)
+        x_name <- colnames(df0)[2]
+        y_name <- colnames(df0)[1]
+        colnames(df0) <- c("y", "x")
+        df0[["x"]] <- as.character(df0[["x"]])
+        ret <- df0[stats::complete.cases(df0[["y"]]), ]
+        attr(ret, "x_name") <- x_name
+        attr(ret, "y_name") <- y_name
+    }
+
+    ret <- ret[order(ret[["x"]]), ]
+
+    return(ret)
+}
+
+
 #' Tied data
 #'
 #' @param x A numeric vector

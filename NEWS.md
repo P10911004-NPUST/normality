@@ -1,10 +1,14 @@
 # normality 0.0.3
 
+* Implement `Lilliefors_test()`
+
 # normality 0.0.2
 
-Submission failed: too high frequency updating CRAN package. So, I cancelled this and wait for the next patch release.
+Submission failed: 
+The submission failed because the CRAN package was being updated too frequently. 
+Therefore, I cancelled this submission and will wait for the next patch release before resubmitting.
 
-* Modified output format.
+* Modified output format and improved functions documentation.
 * Implement `Shapiro_Wilk_test()` (original, Francia, and Royston versions).
 * Implement a handy wrapper: `is_normal()`.
 

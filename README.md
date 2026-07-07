@@ -20,21 +20,18 @@ and other friends.
 
 # Installation
 
-<!-- You can install the package from [CRAN](https://cran.r-project.org/package=normality) with:
+You can install the package from [CRAN](https://cran.r-project.org/package=normality) with:
 
 ``` r
 install.packages("normality")
 ```
 
-or the developmental version from [GitHub](https://github.com/P10911004-NPUST/normality) with: -->
-
-### For the time being, please use the development version. The first CRAN release is not yet optimized for daily use. I expect to submit an updated version next month.
+or the development version from [GitHub](https://github.com/P10911004-NPUST/normality) with:
 
 ``` r
 if (!require("devtools")) install.packages("devtools")
 devtools::install_github("P10911004-NPUST/normality")
 ```
-
 
 # Quick start
 ```r
@@ -44,16 +41,34 @@ is_normal(rnorm(20), summary = TRUE)
 <br>
 
 # TODO
-- Implement functions:  
-  - [x] `skewness()`
-  - [x] `kurtosis()`
-  - [x] `Anderson_Darling_test()`
-  - [ ] `Cramer_von_Mises_test()`
-  - [ ] `Lilliefors_test()`
-  - [x] `D.Agostino_Pearson_test()`
-  - [x] `Jarque_Bera_test()`
-  - [x] `Shapiro_Wilk_test()` with 3 alternatives:
-    - [Shapiro-Wilk](https://doi.org/10.2307/2333709)
-    - [Shapiro-Francia](https://doi.org/10.1080/01621459.1972.10481232)
-    - [Shapiro-Wilk-Royston](https://doi.org/10.1007/BF01891203)
-  - [ ] `Ryan_Joiner_test()` [pdf](https://www.additive-net.de/de/component/jdownloads/send/70-support/236-normal-probability-plots-and-tests-for-normality-thomas-a-ryan-jr-bryan-l-joiner)
+
+## Implement normality tests based on:
+
+### 1. Chi-Square type (may not implemented)
+
+### 2. Empirical distribution function (EDF):
+- [ ] `Kolmogorov_Smirnov_test()`
+- [ ] `Kuiper_test()`
+- [x] `Anderson_Darling_test()`
+- [ ] `Cramer_von_Mises_test()`
+- [x] `Lilliefors_test()`
+
+### 3. Moments:
+- [x] `skewness()`
+- [x] `kurtosis()`
+- [x] `Jarque_Bera_test()`
+- [x] `D.Agostino_Pearson_test()`
+
+### 4. Regression and correlation:
+- [x] `Shapiro_Wilk_test()` with 3 alternatives:
+  - [Shapiro-Wilk](https://doi.org/10.2307/2333709)
+  - [Shapiro-Francia](https://doi.org/10.1080/01621459.1972.10481232)
+  - [Shapiro-Wilk-Royston](https://doi.org/10.1007/BF01891203)
+- [ ] `Ryan_Joiner_test()` [pdf](https://www.additive-net.de/de/component/jdownloads/send/70-support/236-normal-probability-plots-and-tests-for-normality-thomas-a-ryan-jr-bryan-l-joiner)
+
+### Graphical analysis:
+- [ ] Q-Q plot
+- [ ] P-P plot
+
+### Miscellaneous:
+- [?] Searching...

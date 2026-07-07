@@ -20,10 +20,10 @@ The greater the value, the greater chance to consider as non-normal.}
 \item{summary}{Logical (default: FALSE). If \code{TRUE}, show the summary table.}
 }
 \value{
-A list or a boolean.
+A boolean value (or a list if \code{summary = TRUE}).
 }
 \description{
-A handy wrapper for data normality test using the Shapiro-Wilk-Royston,
+A handy wrapper for data normality assessment using the Shapiro-Wilk-Royston,
 D'Agostino-Pearson, and Anderson-Darling tests.
 }
 \examples{

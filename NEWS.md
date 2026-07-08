@@ -1,3 +1,5 @@
+# normality 0.0.4
+
 # normality 0.0.3
 
 * Implement `Lilliefors_test()`

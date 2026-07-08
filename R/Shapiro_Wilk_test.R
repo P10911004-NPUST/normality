@@ -390,7 +390,8 @@ Shapiro_Wilk_test <- function(
         alpha = alpha,
         statistic = c("W" = W),
         pvalue = pval,
-        misc = list("normalized-W (w)" = w, "mTm" = m2, "ci" = ci,
+        misc = list("W" = W, "normalized-W (w)" = w,
+                    "mTm" = m2, "ci" = ci,
                     "m(n)^2" = mn, "m(n-1)^2" = mn1, "m(i)" = mi,
                     "phi" = phi,
                     "a(n)" = an, "a(n-1)" = an1, "ai" = ai,
@@ -401,9 +402,9 @@ Shapiro_Wilk_test <- function(
     if (isTRUE(summary))
     {
         ret[["summary"]] <- normality_standard_summary_table(
-            method = "Shapiro-Wilk-Royston (w)",
+            method = "Shapiro-Wilk-Royston (W)",
             alpha = alpha,
-            statistic = w,
+            statistic = W,
             pval = pval,
             signif = pval2asterisk(pval, c(alpha, 0.01, 0.001)),
             standard_value = Z,

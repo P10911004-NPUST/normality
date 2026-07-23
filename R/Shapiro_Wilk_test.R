@@ -343,6 +343,7 @@ Shapiro_Wilk_test <- function(
     if (n <= 5)
     {
         mn <- mi[n] ^ 2
+        mn1 <- NULL
         phi <- (m2 - 2 * mn) / (1 - 2 * an * an)
         ai <- mi / sqrt(phi)
         ai[1] <- -an

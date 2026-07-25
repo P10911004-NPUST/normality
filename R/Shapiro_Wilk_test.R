@@ -76,6 +76,7 @@ Shapiro_Wilk_test <- function(
     n <- length(x)
 
     if (x[1] - x[n] == 0) stop("All values are identical.")
+    # if (is_tied(x)) warning("Too many tied-values.")
 
     test_name <- switch(m,
                         "Shapiro-Wilk-Royston (w) normality test  ",
@@ -186,7 +187,6 @@ Shapiro_Wilk_test <- function(
     SS <- sum((x - avg) ^ 2)
 
     if (n < 3 || n > 50) stop("Sample size should be 3 <= n <= 50.")
-    if (is_tied(x)) warning("Too many tied-values.")
 
     # If n is odd, remove the middle one, then x will become even
     if (n %% 2 != 0)
@@ -257,7 +257,6 @@ Shapiro_Wilk_test <- function(
     avg = mean(x)
 
     if (n < 5 || n > 5000) stop("Sample size should be 5 <= n <= 5000.")
-    if (is_tied(x)) warning("Too many tied-values.")
 
     m <- stats::qnorm(((1:n) - 0.375) / (n + 0.25))
     W <- stats::cor(x, m) ^ 2
@@ -316,9 +315,7 @@ Shapiro_Wilk_test <- function(
     SS <- sum((x - avg) ^ 2)
     Zcrit <- stats::qnorm(alpha, lower.tail = FALSE)
 
-    #----------------------- Error Message -----------------------#
     if (is.na(n) || n < 3) stop("Sample size should be at least 3.")
-    if (is_tied(x)) warning("Too many tied-values.")
 
     mi <- stats::qnorm(((1:n) - 0.375) / (n + 0.25))
     m2 <- sum(mi ^ 2) # equivalent to sum(t(mi) %*% mi)

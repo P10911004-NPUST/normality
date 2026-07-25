@@ -26,7 +26,7 @@ results to the console.}
 table of the test results.}
 
 \item{method}{Character. Abbreviation specifying the normality test to perform.
-Available options are \code{c("AD", "DAP", "JB", "LF", "SW", "SF", "SWR")}.}
+Available options are \code{c("AD", "CVM", "DAP", "JB", "LF", "SW", "SF", "SWR")}.}
 
 \item{...}{Additional arguments passed to the selected test function.}
 }
@@ -54,6 +54,15 @@ of the distribution. Compared with several alternative normality
 tests, the Anderson–Darling procedure is often more sensitive to
 deviations occurring in extreme values and tail behavior. This test is
 applicable only for sample sizes \code{n >= 8}.
+\item \code{"CVM"}: Cramér–von Mises test.
+An empirical distribution function (EDF)-based goodness-of-fit test
+that measures the overall discrepancy between the empirical and
+theoretical cumulative distribution functions by assigning relatively
+uniform weight across the entire distribution. Compared with the
+Anderson–Darling test, the Cramér–von Mises test is generally less
+sensitive to deviations in the tails but performs well for detecting
+overall departures from normality. This test is applicable only for
+sample sizes \code{n >= 8}.
 \item \code{"DAP"}: D'Agostino–Pearson test.
 A combined omnibus moment test based on sample skewness and kurtosis.
 The procedure transforms the skewness and kurtosis statistics into

@@ -38,15 +38,15 @@ print(out$summary)
 }
 \references{
 D’Agostino, R.B., 2017. Tests for the Normal Distribution.
-In: D’Agostino, R.B., Stephens, M.A. (Eds.),
+In: D'Agostino, R.B., Stephens, M.A. (Eds.),
 Goodness-of-Fit Techniques, 1st ed. Routledge, New York,
-pp. 372–373.
+pg. 372–373.
 https://doi.org/10.1201/9780203753064
 
 Stephens, M.A., 2017. Tests Based on EDF Statistics.
-In: D’Agostino, R.B., Stephens, M.A. (Eds.),
+In: D'Agostino, R.B., Stephens, M.A. (Eds.),
 Goodness-of-Fit Techniques, 1st ed. Routledge, New York,
-pp. 126–128.
+(Table 4.8 & 4.9) pg. 126–128.
 https://doi.org/10.1201/9780203753064
 
 Anderson, T.W., Darling, D.A., 1954.

@@ -12,8 +12,7 @@
 An R package as a toolkit of statistical approaches for assessing data normality.
 
 There are also other nice alternatives such as 
-[`nortest`](https://cran.r-project.org/package=nortest), 
-[`Rita`](https://cran.r-project.org/package=Rita), 
+[`nortest`](https://cran.r-project.org/package=nortest),
 [`moments`](https://cran.r-project.org/package=moments), 
 [`cmstatr`](https://cran.r-project.org/package=cmstatr), 
 and other friends.
@@ -50,7 +49,7 @@ is_normal(rnorm(20), summary = TRUE)
 - [ ] `Kolmogorov_Smirnov_test()`
 - [ ] `Kuiper_test()`
 - [x] `Anderson_Darling_test()`
-- [ ] `Cramer_von_Mises_test()`
+- [x] `Cramer_von_Mises_test()`
 - [x] `Lilliefors_test()`
 
 ### 3. Moments:

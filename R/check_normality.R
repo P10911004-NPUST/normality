@@ -10,7 +10,7 @@
 #' @param summary Logical (default: `TRUE`). If `TRUE`, return a summary
 #'        table of the test results.
 #' @param method Character. Abbreviation specifying the normality test to perform.
-#'        Available options are `c("AD", "DAP", "JB", "LF", "SW", "SF", "SWR")`.
+#'        Available options are `c("AD", "CVM", "DAP", "JB", "LF", "SW", "SF", "SWR")`.
 #' @param ... Additional arguments passed to the selected test function.
 #'
 #' @details
@@ -31,6 +31,16 @@
 #'   tests, the Anderson–Darling procedure is often more sensitive to
 #'   deviations occurring in extreme values and tail behavior. This test is
 #'   applicable only for sample sizes `n >= 8`.
+#'
+#' - `"CVM"`: Cramér–von Mises test.
+#'   An empirical distribution function (EDF)-based goodness-of-fit test
+#'   that measures the overall discrepancy between the empirical and
+#'   theoretical cumulative distribution functions by assigning relatively
+#'   uniform weight across the entire distribution. Compared with the
+#'   Anderson–Darling test, the Cramér–von Mises test is generally less
+#'   sensitive to deviations in the tails but performs well for detecting
+#'   overall departures from normality. This test is applicable only for
+#'   sample sizes `n >= 8`.
 #'
 #' - `"DAP"`: D'Agostino–Pearson test.
 #'   A combined omnibus moment test based on sample skewness and kurtosis.
@@ -95,7 +105,7 @@ check_normality <- function(
         method = "SWR",
         ...
 ) {
-    tests <- c("AD", "DAP", "JB", "LF", "SW", "SF", "SWR")
+    tests <- c("AD", "CVM", "DAP", "JB", "LF", "SW", "SF", "SWR")
     method <- toupper(method)
     method <- match.arg(method, tests)
     m <- match(method, tests)
@@ -103,6 +113,7 @@ check_normality <- function(
 
     func <- switch(m,
                    Anderson_Darling_test,
+                   Cramer_von_Mises_test,
                    D.Agostino_Pearson_test,
                    Jarque_Bera_test,
                    Lilliefors_test,

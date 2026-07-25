@@ -1,5 +1,8 @@
 # normality 0.0.4
 
+* Implement `Cramer_von_Mises_test()`
+* bugfixed: `.Shapiro_Wilk_Royston()` didn't create `mn1` variable when n &le; 5. 
+
 # normality 0.0.3
 
 * Implement `Lilliefors_test()`

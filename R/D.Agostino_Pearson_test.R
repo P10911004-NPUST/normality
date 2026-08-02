@@ -41,7 +41,7 @@ D.Agostino_Pearson_test <- function(
 ) {
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
 
-    x <- x[stats::complete.cases(x)]
+    x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg <- mean(x)
 
@@ -128,7 +128,7 @@ D.Agostino_skewness <- function(
         summary = TRUE
 ) {
     alt <- match.arg(alternative)
-    x <- x[stats::complete.cases(x)]
+    # x <- x[stats::complete.cases(x)]
     n <- length(x)
     avg <- mean(x)
     se <- sqrt((6 * n * (n - 1)) / ((n - 2) * (n + 1) * (n + 3))) # SE(G1)
@@ -228,7 +228,7 @@ D.Agostino_kurtosis <- function(
 ) {
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
 
-    x <- x[stats::complete.cases(x)]
+    # x <- x[stats::complete.cases(x)]
     n <- length(x)
     avg <- mean(x)
 

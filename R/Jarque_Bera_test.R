@@ -41,7 +41,7 @@ Jarque_Bera_test <- function(
 ) {
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
 
-    x <- x[stats::complete.cases(x)]
+    x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
 
     if (x[1] - x[n] == 0) stop("All values are identical.")

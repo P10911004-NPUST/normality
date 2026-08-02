@@ -47,7 +47,7 @@ skewness <- function(
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
     method <- match.arg(method[1], c("G1", "b1", "g1"))
 
-    x <- x[stats::complete.cases(x)]
+    x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg <- mean(x)
 
@@ -181,7 +181,7 @@ skewness <- function(
 Fisher_Pearson_skewness <- function(x, adjusted = TRUE)
 {
     # Adjusted Fisher-Pearson Skewness Coefficient
-    x <- x[stats::complete.cases(x)]
+    x <- sort(x[stats::complete.cases(x)])
     xbar <- mean(x)
     n <- length(x)
 

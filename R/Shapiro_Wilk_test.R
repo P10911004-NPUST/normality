@@ -181,7 +181,7 @@ Shapiro_Wilk_test <- function(
         silent = FALSE,
         summary = TRUE
 ) {
-    x <- sort(x[stats::complete.cases(x)])
+    # x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg <- mean(x)
     SS <- sum((x - avg) ^ 2)
@@ -252,7 +252,7 @@ Shapiro_Wilk_test <- function(
         silent = FALSE,
         summary = TRUE
 ) {
-    x <- sort(x[stats::complete.cases(x)])
+    # x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg = mean(x)
 
@@ -309,7 +309,7 @@ Shapiro_Wilk_test <- function(
         silent = FALSE,
         summary = TRUE
 ) {
-    x <- sort(x[stats::complete.cases(x)])
+    # x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg <- mean(x)
     SS <- sum((x - avg) ^ 2)

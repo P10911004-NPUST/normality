@@ -49,7 +49,7 @@ kurtosis <- function(
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
     method <- match.arg(method[1], c("G2", "b2", "g2"))
 
-    x <- x[stats::complete.cases(x)]
+    x <- sort(x[stats::complete.cases(x)])
     n <- length(x)
     avg <- mean(x)
 

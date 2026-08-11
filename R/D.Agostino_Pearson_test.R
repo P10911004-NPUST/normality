@@ -41,11 +41,12 @@ D.Agostino_Pearson_test <- function(
 ) {
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
 
-    x <- sort(x[stats::complete.cases(x)])
+    x <- x[stats::complete.cases(x)]
     n <- length(x)
     avg <- mean(x)
 
-    if (x[1] - x[n] == 0) stop("All values are identical.")
+    # if (x[1] - x[n] == 0) stop("All values are identical.")
+    if (length(unique(x)) == 1) stop("All values are identical.")
 
     #-------------------------------- skewness --------------------------------#
     skew_out <- D.Agostino_skewness(x, alpha, alt, summary)

@@ -49,11 +49,12 @@ kurtosis <- function(
     alt <- match.arg(alternative[1], c("two.sided", "less", "greater"))
     method <- match.arg(method[1], c("G2", "b2", "g2"))
 
-    x <- sort(x[stats::complete.cases(x)])
+    x <- x[stats::complete.cases(x)]
     n <- length(x)
     avg <- mean(x)
 
-    if (x[1] - x[n] == 0) stop("All values are identical.")
+    # if (x[1] - x[n] == 0) stop("All values are identical.")
+    if (length(unique(x)) == 1) stop("All values are identical.")
 
     m2 <- sum((x - avg) ^ 2) / n
     m4 <- sum((x - avg) ^ 4) / n

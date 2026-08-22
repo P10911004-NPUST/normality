@@ -1,6 +1,7 @@
 # normality 0.0.4
 
-* Implement `Cramer_von_Mises_test()`
+* Modified `check_normality()`, accepts both atomic input and data frame + formula input.
+* Implement `Cramer_von_Mises_test()`.
 * bugfixed: `.Shapiro_Wilk_Royston()` didn't create `mn1` variable when n &le; 5. 
 * bugfixed: sort all input `x` before analysis.
 

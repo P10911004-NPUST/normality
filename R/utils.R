@@ -2,6 +2,14 @@ tidy_to_dataframe <- function(data, formula = NULL)
 {
     ret <- NULL
 
+    if (is.atomic(data) & is.null(dim(data)))
+    {
+        ret <- data.frame(y = data, x = 1)
+        attr(ret, "x_name") <- "IV"
+        attr(ret, "y_name") <- "DV"
+        return(ret)
+    }
+
     if (is.recursive(data) & is.null(dim(data)))
     {
         data <- lapply(data, function(x) x[stats::complete.cases(x)])

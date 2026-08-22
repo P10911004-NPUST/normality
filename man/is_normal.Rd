@@ -9,8 +9,7 @@ is_normal(data, formula = NULL, alpha = 0.05, sensitivity = 2, summary = FALSE)
 \arguments{
 \item{data}{A data frame or a numeric vector.}
 
-\item{formula}{Formula (default: NULL).
-If \code{data} is a data frame, define the val ~ group.}
+\item{formula}{Formula (default: NULL). If \code{data} is a data frame, define the val ~ group.}
 
 \item{alpha}{Significance threshold, range from 0 to 1 (default: 0.05).}
 

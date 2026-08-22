@@ -7,9 +7,9 @@ test_that("check_normality", {
                      211, 212, 215, 216, 217, 218, 200, 202, 192, 198,
                      184, 167)
 
-    AD_out <- check_normality(cholesterol, silent = TRUE, method = "AD")
-    DAP_out <- check_normality(cholesterol, silent = TRUE, method = "DAP")
-    SWR_out <- check_normality(cholesterol, silent = TRUE, method = "SWR")
+    AD_out <- check_normality(cholesterol, method = "AD", summary = FALSE)[[1]]
+    DAP_out <- check_normality(cholesterol, method = "DAP", summary = FALSE)[[1]]
+    SWR_out <- check_normality(cholesterol, method = "SWR", summary = FALSE)[[1]]
 
     A2 <- round(AD_out[["statistic"]][["A2"]], 2)
     K2 <- round(DAP_out[["statistic"]][["K2"]], 2)

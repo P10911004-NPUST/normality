@@ -5,30 +5,26 @@
 \title{Normality test}
 \usage{
 check_normality(
-  x,
+  data,
+  formula = NULL,
   alpha = 0.05,
-  silent = FALSE,
-  summary = TRUE,
   method = "SWR",
-  ...
+  summary = TRUE
 )
 }
 \arguments{
-\item{x}{A numeric vector containing the sample observations.}
+\item{data}{A data frame or a numeric vector.}
+
+\item{formula}{Formula (default: NULL). If \code{data} is a data frame, define the val ~ group.}
 
 \item{alpha}{Numeric (default: \code{0.05}). Significance level used to determine
 whether the null hypothesis is rejected. Must be between 0 and 1.}
 
-\item{silent}{Logical (default: \code{FALSE}). If \code{FALSE}, print the test
-results to the console.}
-
-\item{summary}{Logical (default: \code{TRUE}). If \code{TRUE}, return a summary
-table of the test results.}
-
 \item{method}{Character. Abbreviation specifying the normality test to perform.
 Available options are \code{c("AD", "CVM", "DAP", "JB", "LF", "SW", "SF", "SWR")}.}
 
-\item{...}{Additional arguments passed to the selected test function.}
+\item{summary}{Logical (default: \code{TRUE}). If \code{TRUE}, return a summary
+table of the test results.}
 }
 \value{
 A list.
@@ -37,13 +33,11 @@ A list.
 A wrapper function for the normality tests available in this package.
 }
 \details{
-The \code{method} argument specifies the statistical procedure used to
-assess whether a sample is consistent with a normal distribution.
-Different tests emphasize different characteristics of departures
-from normality, such as skewness, kurtosis, or discrepancies in the
-tails of the distribution. Because no single test performs optimally
-under all circumstances, the choice of method may depend on sample
-size and the expected type of non-normality.
+The \code{method} argument specifies the statistical procedure used to assess whether a sample is
+consistent with a normal distribution. Different tests emphasize different characteristics of
+departures from normality, such as skewness, kurtosis, or discrepancies in the tails of the
+distribution. Because no single test performs optimally under all circumstances, the choice of
+method may depend on sample size and the expected type of non-normality.
 
 Available methods are:
 \itemize{

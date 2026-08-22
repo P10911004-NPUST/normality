@@ -4,8 +4,7 @@
 #' D'Agostino-Pearson, and Anderson-Darling tests.
 #'
 #' @param data A data frame or a numeric vector.
-#' @param formula Formula (default: NULL).
-#'        If `data` is a data frame, define the val ~ group.
+#' @param formula Formula (default: NULL). If `data` is a data frame, define the val ~ group.
 #' @param alpha Significance threshold, range from 0 to 1 (default: 0.05).
 #' @param sensitivity Numeric, range from 1 to 3 (default: 2).
 #'        The greater the value, the greater chance to consider as non-normal.

@@ -135,7 +135,7 @@ D.Agostino_skewness <- function(
     se <- sqrt((6 * n * (n - 1)) / ((n - 2) * (n + 1) * (n + 3))) # SE(G1)
 
     if (n < 9)
-        warning("D'Agostino-Pearson skewness test is inappropriate for n < 9")
+        warning("D'Agostino-Pearson skewness test is less robust for n < 9")
 
     #----------------------------- Sample moments -----------------------------#
     m2 <- sum((x - avg) ^ 2) / n # formula 6
@@ -234,7 +234,7 @@ D.Agostino_kurtosis <- function(
     avg <- mean(x)
 
     if (n < 20)
-        warning("D'Agostino-Pearson kurtosis test is inappropriate for n < 20")
+        warning("D'Agostino-Pearson kurtosis test is less robust for n < 20")
 
     #----------------------------- Sample moments -----------------------------#
     m2 <- sum((x - avg) ^ 2) / n

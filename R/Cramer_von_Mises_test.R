@@ -42,7 +42,7 @@ Cramer_von_Mises_test <- function(
     std <- stats::sd(x)
 
     if (x[1] - x[n] == 0) stop("All values are identical.")
-    if (n < 8) warning("Cramer-von-Mises test is inappropriate for n < 8")
+    if (n < 8) warning("Cramer-von-Mises test is less robust for n < 8")
 
     Z <- (x - avg) / std
     Pi_lower <- stats::pnorm(Z)

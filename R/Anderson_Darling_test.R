@@ -49,7 +49,7 @@ Anderson_Darling_test <- function(
     Z <- (x - avg) / std # Y(i) in formula 9.9
 
     if (x[1] - x[n] == 0) stop("All values are identical.")
-    if (n < 8) warning("Anderson-Darling test is inappropriate for n < 8")
+    if (n < 8) warning("Anderson-Darling test is less robust for n < 8")
 
     Pi_lower <- stats::pnorm(Z)
     Pi_upper <- rev(stats::pnorm(Z, lower.tail = FALSE))

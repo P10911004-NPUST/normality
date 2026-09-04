@@ -1,4 +1,23 @@
 url: https://p10911004-npust.github.io/normality/
+
+home:
+  title: Data Normality Assessment
+
 template:
   bootstrap: 5
+  math-rendering: mathjax
+  # light-switch: true
+  bslib:
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+    danger: "#A6081A"
 
+navbar:
+  structure:
+    left: [home, get_started, reference]
+
+  components:
+    get_started:
+      text: Get started
+      href: tutorials/normality.html

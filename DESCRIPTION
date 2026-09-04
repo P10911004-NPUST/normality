@@ -8,7 +8,7 @@ Description: A toolkit for assessing data normality using a comprehensive collec
     It includes descriptive measures and formal hypothesis tests, such as skewness and kurtosis tests, 
     the Anderson–Darling test, the Shapiro–Wilk test, and the D'Agostino–Pearson K2 omnibus test.
 License: MIT + file LICENSE
-URL: https://github.com/P10911004-NPUST/normality
+URL: https://github.com/P10911004-NPUST/normality, https://p10911004-npust.github.io/normality/
 BugReports: https://github.com/P10911004-NPUST/normality/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

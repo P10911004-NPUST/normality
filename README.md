@@ -21,13 +21,13 @@ and other friends.
 
 You can install the package from [CRAN](https://cran.r-project.org/package=normality) with:
 
-``` r
+```r
 install.packages("normality")
 ```
 
 or the development version from [GitHub](https://github.com/P10911004-NPUST/normality) with:
 
-``` r
+```r
 if (!require("pak")) install.packages("pak")
 pak::pak("P10911004-NPUST/normality")
 ```

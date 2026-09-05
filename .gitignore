@@ -47,3 +47,4 @@ rsconnect/
 .Rproj.user
 pkgdown
 inst/doc
+docs

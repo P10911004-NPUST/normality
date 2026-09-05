@@ -1,5 +1,9 @@
 # normality 0.0.5
 
+* Modified `is_normal()` to allow data frame and formula as input
+* Added vignettes
+* Added pkgdown branch and built site on that branch
+
 # normality 0.0.4
 
 * Modified `check_normality()`, accepts both atomic input and data frame + formula input.

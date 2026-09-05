@@ -11,6 +11,8 @@
 
 An R package as a toolkit of statistical approaches for assessing data normality.
 
+**[Get started](https://p10911004-npust.github.io/normality/articles/normality.html)**
+
 There are also other nice alternatives such as 
 [`nortest`](https://cran.r-project.org/package=nortest),
 [`moments`](https://cran.r-project.org/package=moments), 

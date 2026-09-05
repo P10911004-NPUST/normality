@@ -2,6 +2,12 @@
 
 ## normality 0.0.5
 
+- Modified
+  [`is_normal()`](https://p10911004-npust.github.io/normality/reference/is_normal.md)
+  to allow data frame and formula as input
+- Added vignettes
+- Added pkgdown branch and built site on that branch
+
 ## normality 0.0.4
 
 CRAN release: 2026-08-22

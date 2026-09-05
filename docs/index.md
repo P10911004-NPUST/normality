@@ -49,26 +49,26 @@ is_normal(rnorm(20), summary = TRUE)
 
 `Kuiper_test()`
 
-[`Anderson_Darling_test()`](reference/Anderson_Darling_test.md)
+[`Anderson_Darling_test()`](https://p10911004-npust.github.io/normality/reference/Anderson_Darling_test.md)
 
-[`Cramer_von_Mises_test()`](reference/Cramer_von_Mises_test.md)
+[`Cramer_von_Mises_test()`](https://p10911004-npust.github.io/normality/reference/Cramer_von_Mises_test.md)
 
-[`Lilliefors_test()`](reference/Lilliefors_test.md)
+[`Lilliefors_test()`](https://p10911004-npust.github.io/normality/reference/Lilliefors_test.md)
 
 ### 3. Moments:
 
-[`skewness()`](reference/skewness.md)
+[`skewness()`](https://p10911004-npust.github.io/normality/reference/skewness.md)
 
-[`kurtosis()`](reference/kurtosis.md)
+[`kurtosis()`](https://p10911004-npust.github.io/normality/reference/kurtosis.md)
 
-[`Jarque_Bera_test()`](reference/Jarque_Bera_test.md)
+[`Jarque_Bera_test()`](https://p10911004-npust.github.io/normality/reference/Jarque_Bera_test.md)
 
-[`D.Agostino_Pearson_test()`](reference/D.Agostino_Pearson_test.md)
+[`D.Agostino_Pearson_test()`](https://p10911004-npust.github.io/normality/reference/D.Agostino_Pearson_test.md)
 
 ### 4. Regression and correlation:
 
-[`Shapiro_Wilk_test()`](reference/Shapiro_Wilk_test.md) with 3
-alternatives:
+[`Shapiro_Wilk_test()`](https://p10911004-npust.github.io/normality/reference/Shapiro_Wilk_test.md)
+with 3 alternatives:
 
 - [Shapiro-Wilk](https://doi.org/10.2307/2333709)
 - [Shapiro-Francia](https://doi.org/10.1080/01621459.1972.10481232)

@@ -49,7 +49,7 @@ set.seed(123)
 ## 3. Quick start
 
 The simplest way to assess a numeric vector is with
-[`is_normal()`](../reference/is_normal.md).
+[`is_normal()`](https://p10911004-npust.github.io/normality/reference/is_normal.md).
 
 ``` r
 
@@ -85,7 +85,7 @@ is_normal(x, summary = TRUE)
 and feel free to skip the remainder of this guide.**
 
 For explicit test selection, use
-[`check_normality()`](../reference/check_normality.md):
+[`check_normality()`](https://p10911004-npust.github.io/normality/reference/check_normality.md):
 
 ``` r
 
@@ -120,11 +120,11 @@ empirical and theoretical distributions.
 
 | Method | Function | Sample-size |
 |----|----|----|
-| AD | [`Anderson_Darling_test()`](../reference/Anderson_Darling_test.md) | ≥ 8 |
-| CVM | [`Cramer_von_Mises_test()`](../reference/Cramer_von_Mises_test.md) | ≥ 8 |
-| LF | [`Lilliefors_test()`](../reference/Lilliefors_test.md) | ≥ 8 |
-| DAP | [`D.Agostino_Pearson_test()`](../reference/D.Agostino_Pearson_test.md) | ≥ 20 |
-| JB | [`Jarque_Bera_test()`](../reference/Jarque_Bera_test.md) | ≥ 20 |
+| AD | [`Anderson_Darling_test()`](https://p10911004-npust.github.io/normality/reference/Anderson_Darling_test.md) | ≥ 8 |
+| CVM | [`Cramer_von_Mises_test()`](https://p10911004-npust.github.io/normality/reference/Cramer_von_Mises_test.md) | ≥ 8 |
+| LF | [`Lilliefors_test()`](https://p10911004-npust.github.io/normality/reference/Lilliefors_test.md) | ≥ 8 |
+| DAP | [`D.Agostino_Pearson_test()`](https://p10911004-npust.github.io/normality/reference/D.Agostino_Pearson_test.md) | ≥ 20 |
+| JB | [`Jarque_Bera_test()`](https://p10911004-npust.github.io/normality/reference/Jarque_Bera_test.md) | ≥ 20 |
 | SW | `Shapiro_Wilk_test(method = "SW")` | 3–50 |
 | SF | `Shapiro_Wilk_test(method = "SF")` | 5–5000 |
 | SWR | `Shapiro_Wilk_test(method = "SWR")` | 3–5000 |
@@ -255,8 +255,8 @@ are limited by ties in the data and provide no numerical indication of
 the nature of non-normality as a by-product ([D’Agostino,
 1986](https://doi.org/10.1201/9780203753064); Section 9.5).
 
-[`Shapiro_Wilk_test()`](../reference/Shapiro_Wilk_test.md) provides
-three related procedures:
+[`Shapiro_Wilk_test()`](https://p10911004-npust.github.io/normality/reference/Shapiro_Wilk_test.md)
+provides three related procedures:
 
 - `SW`: Shapiro–Wilk;
 - `SF`: Shapiro–Francia;
@@ -309,9 +309,9 @@ swr <- Shapiro_Wilk_test(x, method = "SWR")
 
 The Shapiro-family procedures have finite sample-size limits in their
 direct implementations.
-[`Shapiro_Wilk_test()`](../reference/Shapiro_Wilk_test.md) applies an
-re-sampling mechanism by default for observations above the maximum
-supported sample size.
+[`Shapiro_Wilk_test()`](https://p10911004-npust.github.io/normality/reference/Shapiro_Wilk_test.md)
+applies an re-sampling mechanism by default for observations above the
+maximum supported sample size.
 
 ``` r
 
@@ -344,7 +344,7 @@ response ~ group
 ```
 
 The same interface is available in
-[`is_normal()`](../reference/is_normal.md):
+[`is_normal()`](https://p10911004-npust.github.io/normality/reference/is_normal.md):
 
 ``` r
 
@@ -387,9 +387,10 @@ for (i in 1:3)
 
 ## 7. Skewness
 
-The [`skewness()`](../reference/skewness.md) function assesses
-distributional asymmetry. Three estimators (`G1`, `b1`, `g1`) are
-available ([Joanes & Gill,
+The
+[`skewness()`](https://p10911004-npust.github.io/normality/reference/skewness.md)
+function assesses distributional asymmetry. Three estimators (`G1`,
+`b1`, `g1`) are available ([Joanes & Gill,
 1998](https://doi.org/10.1111/1467-9884.00122), [Wright & Herrington,
 2011](https://doi.org/10.3758/s13428-010-0044-x)).
 
@@ -429,9 +430,10 @@ skewness(x, method = "g1")
 
 ## 8. Kurtosis
 
-The [`kurtosis()`](../reference/kurtosis.md) function assesses
-tail-related distributional characteristics. Three estimators (`G2`,
-`b2`, `g2`) are available ([Joanes & Gill,
+The
+[`kurtosis()`](https://p10911004-npust.github.io/normality/reference/kurtosis.md)
+function assesses tail-related distributional characteristics. Three
+estimators (`G2`, `b2`, `g2`) are available ([Joanes & Gill,
 1998](https://doi.org/10.1111/1467-9884.00122), [Wright & Herrington,
 2011](https://doi.org/10.3758/s13428-010-0044-x)).
 
@@ -492,25 +494,26 @@ departures from normality.
 
 The main functions are:
 
-- [`is_normal()`](../reference/is_normal.md) for high-level automatic
-  assessment;
-- [`check_normality()`](../reference/check_normality.md) for selecting a
-  specific normality test;
-- [`Shapiro_Wilk_test()`](../reference/Shapiro_Wilk_test.md) for
-  Shapiro-family procedures;
-- [`Anderson_Darling_test()`](../reference/Anderson_Darling_test.md) for
-  tail-sensitive EDF testing;
-- [`Cramer_von_Mises_test()`](../reference/Cramer_von_Mises_test.md) for
-  overall EDF discrepancy;
-- [`Lilliefors_test()`](../reference/Lilliefors_test.md) for KS-type
-  normality assessment;
-- [`D.Agostino_Pearson_test()`](../reference/D.Agostino_Pearson_test.md)
-  and [`Jarque_Bera_test()`](../reference/Jarque_Bera_test.md) for
-  moment-based tests;
-- [`skewness()`](../reference/skewness.md) for distributional asymmetry;
+- [`is_normal()`](https://p10911004-npust.github.io/normality/reference/is_normal.md)
+  for high-level automatic assessment;
+- [`check_normality()`](https://p10911004-npust.github.io/normality/reference/check_normality.md)
+  for selecting a specific normality test;
+- [`Shapiro_Wilk_test()`](https://p10911004-npust.github.io/normality/reference/Shapiro_Wilk_test.md)
+  for Shapiro-family procedures;
+- [`Anderson_Darling_test()`](https://p10911004-npust.github.io/normality/reference/Anderson_Darling_test.md)
+  for tail-sensitive EDF testing;
+- [`Cramer_von_Mises_test()`](https://p10911004-npust.github.io/normality/reference/Cramer_von_Mises_test.md)
+  for overall EDF discrepancy;
+- [`Lilliefors_test()`](https://p10911004-npust.github.io/normality/reference/Lilliefors_test.md)
+  for KS-type normality assessment;
+- [`D.Agostino_Pearson_test()`](https://p10911004-npust.github.io/normality/reference/D.Agostino_Pearson_test.md)
   and
-- [`kurtosis()`](../reference/kurtosis.md) for tail-related
-  characteristics.
+  [`Jarque_Bera_test()`](https://p10911004-npust.github.io/normality/reference/Jarque_Bera_test.md)
+  for moment-based tests;
+- [`skewness()`](https://p10911004-npust.github.io/normality/reference/skewness.md)
+  for distributional asymmetry; and
+- [`kurtosis()`](https://p10911004-npust.github.io/normality/reference/kurtosis.md)
+  for tail-related characteristics.
 
 Formal tests are most informative when considered together with sample
 size, graphical diagnostics, and the assumptions of the statistical

@@ -60,7 +60,7 @@ https://doi.org/10.2307/1403192
 
 ## See also
 
-[`D.Agostino_Pearson_test()`](D.Agostino_Pearson_test.md)
+[`D.Agostino_Pearson_test()`](https://p10911004-npust.github.io/normality/reference/D.Agostino_Pearson_test.md)
 
 ## Examples
 

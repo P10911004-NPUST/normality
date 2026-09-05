@@ -39,9 +39,6 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-# pkgdown site
-docs/
-
 # translation temp files
 po/*~
 
@@ -49,5 +46,4 @@ po/*~
 rsconnect/
 .Rproj.user
 pkgdown
-docs
 inst/doc

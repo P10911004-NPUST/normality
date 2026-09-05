@@ -1,0 +1,25 @@
+url: ~
+template:
+  bootstrap: 5
+  math-rendering: mathjax
+  light-switch: true
+  bslib:
+    # Main colors
+    primary: "#0054AD"
+    secondary: "#6C757D"
+    success: "#198754"
+    info: "#0DCAF0"
+    warning: "#FFC107"
+    danger: "#A6081A"
+
+    # General appearance
+    body-bg: "#FFFFFF"
+    body-color: "#212529"
+    border-radius: 0.5rem
+
+    # Buttons
+    btn-border-radius: 0.25rem
+
+    # Links
+    link-color: "#0054AD"
+

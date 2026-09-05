@@ -1,0 +1,26 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/normality.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/Anderson_Darling_test.html</loc></url>
+<url><loc>/reference/check_normality.html</loc></url>
+<url><loc>/reference/Cramer_von_Mises_test.html</loc></url>
+<url><loc>/reference/D.Agostino_Pearson_test.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/is_normal.html</loc></url>
+<url><loc>/reference/is_tied.html</loc></url>
+<url><loc>/reference/Jarque_Bera_test.html</loc></url>
+<url><loc>/reference/kurtosis.html</loc></url>
+<url><loc>/reference/Lilliefors_test.html</loc></url>
+<url><loc>/reference/normality_standard_output.html</loc></url>
+<url><loc>/reference/Shapiro_Wilk_coef_table.html</loc></url>
+<url><loc>/reference/Shapiro_Wilk_pval_table.html</loc></url>
+<url><loc>/reference/Shapiro_Wilk_test.html</loc></url>
+<url><loc>/reference/skewness.html</loc></url>
+</urlset>
+

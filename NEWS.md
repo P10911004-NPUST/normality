@@ -1,3 +1,5 @@
+# normality 0.0.5
+
 # normality 0.0.4
 
 * Modified `check_normality()`, accepts both atomic input and data frame + formula input.
